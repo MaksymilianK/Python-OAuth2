@@ -1,29 +1,24 @@
 <template>
   <article>
-    <h2>Sign up</h2>
+    <h2>Add client</h2>
 
-    <form @submit="signUp">
+    <form @submit="addClient">
       <label>
-        Nick
-        <input type="text" v-model="nick">
+        Name
+        <input type="text" v-model="name">
       </label>
 
       <label>
-        Email
-        <input type="email" v-model="email">
+        Description
+        <input type="textarea" v-model="description">
       </label>
 
       <label>
-        Password
-        <input type="password" v-model="password">
+        Redirect URL
+        <input type="textarea" v-model="redirectURL">
       </label>
 
-      <label>
-        Repeat password
-        <input type="password" v-model="repeatPassword">
-      </label>
-
-      <button type="submit">Sign up</button>
+      <button type="submit">Add client</button>
     </form>
 
     <p v-if="error" class="error">{{ error }}</p>
@@ -32,30 +27,25 @@
 
 <script>
 import {ref} from "vue";
-import {authService} from "@/services/auth-service";
-import {HTTP_CONFLICT, HTTP_OK} from "@/http-status";
+import {HTTP_OK, HTTP_UNAUTHORIZED} from "@/http-status";
 import {useRouter} from "vue-router";
-import {SignUpForm} from "@/models/sign-up-form";
 import {userValidators} from "@/utils/user-validators";
-import {ERROR_EMAIL_EXISTS, ERROR_NICK_EXISTS} from "@/error-codes";
+import {ERROR_EMAIL_NOT_EXIST, ERROR_WRONG_PASSWORD} from "@/error-codes";
+import {AddClientForm} from "@/models/add-client-form";
+import {clientService} from "@/services/client-service";
 
 export default {
-  name: "TheSignUp",
+  name: "TheAddClient",
   setup() {
     const router = useRouter();
 
-    const formModel = new SignUpForm();
+    const formModel = new AddClientForm();
     const error = ref("");
 
     const validators = userValidators;
 
-    function signUp(event) {
+    function signIn(event) {
       event.preventDefault();
-
-      error.value = validators.validateNick(formModel.nick.value);
-      if (error.value) {
-        return;
-      }
 
       error.value = validators.validateEmail(formModel.email.value);
       if (error.value) {
@@ -67,22 +57,18 @@ export default {
         return;
       }
 
-      error.value = validators.validatePasswordsMatch(formModel.password.value, formModel.repeatPassword.value);
-      if (error.value) {
-        return;
-      }
-
-      authService.signUp(formModel)
+      clientService.add(formModel)
           .then(res => {
+            console.log(res);
             switch (res.status) {
               case HTTP_OK:
                 router.push("home");
                 break;
-              case HTTP_CONFLICT:
-                if (res.body.detail === ERROR_EMAIL_EXISTS) {
-                  error.value = "Email already exists!";
-                } else if (res.body.detail === ERROR_NICK_EXISTS) {
-                  error.value = "Nick already exists!";
+              case HTTP_UNAUTHORIZED:
+                if (res.body.detail === ERROR_EMAIL_NOT_EXIST) {
+                  error.value = "Email does not exist!";
+                } else if (res.body.detail === ERROR_WRONG_PASSWORD) {
+                  error.value = "Wrong password!";
                 } else {
                   error.value = "Unexpected error!";
                 }
@@ -101,7 +87,7 @@ export default {
     return {
       ...formModel,
       error,
-      signUp
+      signIn
     }
   }
 }

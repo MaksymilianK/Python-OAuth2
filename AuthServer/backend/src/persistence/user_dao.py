@@ -12,10 +12,10 @@ class UserDAO:
         self.__db = db
 
     def exists_with_nick(self, nick: str) -> bool:
-        return self.__db.query(UserModel).filter(UserModel.nick == nick).exists()
+        return self.__db.query(UserModel).filter(UserModel.nick == nick).first() is not None
 
     def exists_with_email(self, email: str) -> bool:
-        return self.__db.query(UserModel).filter(UserModel.email == email).exists()
+        return self.__db.query(UserModel).filter(UserModel.email == email).first() is not None
 
     def get_one_by_email(self, email: str) -> Optional[User]:
         user = self.__db.query(UserModel).filter(UserModel.email == email).first()

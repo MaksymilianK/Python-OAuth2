@@ -1,4 +1,5 @@
 import secrets
+from typing import Optional
 
 from fastapi import Depends
 
@@ -18,5 +19,5 @@ class SessionService:
     def delete(self, session_id: str):
         self.__dao.delete(session_id)
 
-    def get_user(self, session_id: str) -> User:
+    def get_user(self, session_id: str) -> Optional[User]:
         return self.__dao.get_user(session_id)

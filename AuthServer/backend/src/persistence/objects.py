@@ -9,8 +9,9 @@ class User:
 
 
 class Client:
-    def __init__(self, name: Optional[str] = None, description: Optional[str] = None, redirect_url: Optional[str] = None,
-                 owner: Optional[User] = None):
+    def __init__(self, id: Optional[int] = None, name: Optional[str] = None, description: Optional[str] = None,
+                 redirect_url: Optional[str] = None, owner: Optional[User] = None):
+        self.id = id
         self.name = name
         self.description = description
         self.redirect_url = redirect_url

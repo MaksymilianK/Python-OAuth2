@@ -21,3 +21,13 @@ class WrongPasswordException(Exception):
 class UserNotAuthenticatedException(Exception):
     detail = 5
     pass
+
+
+class ClientNameExistsException(Exception):
+    detail = 6
+    pass
+
+
+class ClientRedirectURLExistsException(Exception):
+    detail = 7
+    pass

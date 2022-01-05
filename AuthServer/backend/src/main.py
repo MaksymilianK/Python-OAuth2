@@ -15,22 +15,24 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 
-@app.post("/auth/api/users", status_code=204)
-def create_user(response: Response, user: UserCreateRequest, service: UserService = Depends(UserService)):
+@app.post("/auth/api/users", response_model=UserResponse)
+def sign_up(response: Response, user: UserCreateRequest, service: UserService = Depends(UserService)):
     try:
-        session_id = service.create_user(user)
-        response.set_cookie(key="SID", value=session_id)
+        user, session_id = service.create(user)
+        response.set_cookie(key="SID", value=session_id, expires=2147483647)
+        return user
     except NickExistsException as e:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=e.detail)
     except EmailExistsException as e:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=e.detail)
 
 
-@app.post("/auth/api/current-user", status_code=204)
+@app.post("/auth/api/current-user", response_model=UserResponse)
 def sign_in(response: Response, form: UserSignInRequest, service: UserService = Depends(UserService)):
     try:
-        session_id = service.sign_in(form)
-        response.set_cookie(key="SID", value=session_id)
+        user, session_id = service.sign_in(form)
+        response.set_cookie(key="SID", value=session_id, expires=2147483647)
+        return user
     except EmailNotExistException as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)
     except WrongPasswordException as e:
@@ -44,9 +46,8 @@ def sign_out(response: Response, sid: Optional[str] = Cookie(None), service: Use
 
 
 @app.get("/auth/api/current-user", response_model=UserResponse)
-def get_current(sid: Optional[str] = Cookie(None), service: UserService = Depends(UserService)):
-    print("lolxd")
+def get_current(SID: Optional[str] = Cookie(None), service: UserService = Depends(UserService)):
     try:
-        return service.get_user(sid)
+        return service.get_user(SID)
     except UserNotAuthenticatedException as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)

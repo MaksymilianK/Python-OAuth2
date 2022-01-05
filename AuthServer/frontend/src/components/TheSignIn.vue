@@ -54,7 +54,6 @@ export default {
 
       authService.signIn(formModel)
           .then(res => {
-            console.log(res);
             switch (res.status) {
               case HTTP_OK:
                 router.push("home");

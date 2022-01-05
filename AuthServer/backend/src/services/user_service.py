@@ -17,22 +17,22 @@ class UserService:
         self.__session_service = session_service
         self.__dao = dao
 
-    def create_user(self, user: UserCreateRequest) -> str:
-        if self.__dao.exists_with_nick(user.nick):
+    def create(self, user_request: UserCreateRequest) -> tuple[User, str]:
+        if self.__dao.exists_with_nick(user_request.nick):
             raise NickExistsException()
-        elif self.__dao.exists_with_email(user.email):
+        elif self.__dao.exists_with_email(user_request.email):
             raise EmailExistsException()
 
-        user_with_hash = User(
-            nick=user.nick,
-            email=user.email,
-            password=self.__password_service.generate_hash(user.password)
+        user = User(
+            nick=user_request.nick,
+            email=user_request.email,
+            password=self.__password_service.generate_hash(user_request.password)
         )
 
-        self.__dao.create(user_with_hash)
-        return self.__session_service.create(user_with_hash)
+        self.__dao.create(user)
+        return user, self.__session_service.create(user)
 
-    def sign_in(self, form: UserSignInRequest) -> str:
+    def sign_in(self, form: UserSignInRequest) -> tuple[User, str]:
         user = self.__dao.get_one_by_email(form.email)
         if user is None:
             raise EmailNotExistException()
@@ -40,7 +40,7 @@ class UserService:
         if not self.__password_service.verify(user.password, form.password):
             raise WrongPasswordException()
 
-        return self.__session_service.create(user)
+        return user, self.__session_service.create(user)
 
     def sign_out(self, session_id: str):
         self.__session_service.delete(session_id)

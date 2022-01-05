@@ -14,24 +14,24 @@ export const authService = {
 
     get_current() {
         return httpService.get("/current-user")
-            .then(this._try_set_current);
+            .then(res => this._try_set_current(res));
     },
 
     signUp(formModel) {
         const body = new SignUpRequest(formModel.nick.value, formModel.email.value, formModel.password.value);
         return httpService.post("/users", body)
-            .then(this._try_set_current);
+            .then(res => this._try_set_current(res));
     },
 
     signIn(formModel) {
         const body = new SignInRequest(formModel.email.value, formModel.password.value);
         return httpService.post("/current-user", body)
-            .then(this._try_set_current);
+            .then(res => this._try_set_current(res));
     },
 
     signOut() {
         return httpService.delete("/current-user")
-            .then(this._try_unset_current);
+            .then(res => this._try_unset_current(res));
     },
 
     _try_set_current(res) {

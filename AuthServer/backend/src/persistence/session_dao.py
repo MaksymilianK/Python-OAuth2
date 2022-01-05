@@ -24,4 +24,4 @@ class SessionDAO:
         if session is None:
             return None
 
-        return User(nick=session.owner.nick)
+        return User(nick=session.owner_nick)
