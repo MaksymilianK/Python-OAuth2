@@ -1,6 +1,7 @@
 import TheHome from "@/components/TheHome";
 import TheSignUp from "@/components/TheSignUp";
 import TheSignIn from "@/components/TheSignIn";
+import TheAddClient from "@/components/TheAddClient";
 
 export const routes = [
   {
@@ -17,5 +18,10 @@ export const routes = [
     path: '/sign-in',
     name: 'sign-in',
     component: TheSignIn
+  },
+  {
+    path: '/add-client',
+    name: 'add-client',
+    component: TheAddClient
   }
 ]

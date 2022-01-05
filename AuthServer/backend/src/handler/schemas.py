@@ -1,5 +1,6 @@
 from typing import Optional
 
+from pydantic import Field
 from pydantic.main import BaseModel
 
 
@@ -33,16 +34,14 @@ class ClientBase(BaseModel):
 
 
 class ClientCreateRequest(ClientBase):
-    redirect_url: str
+    redirect_url: str = Field(alias="redirectUrl")
 
 
-class ClientCreate(ClientBase):
-    redirect_url: str
-    owner: UserBase
-
-
-class ClientResponse(ClientBase):
+class ClientResponse(BaseModel):
     id: int
+
+    class Config:
+        orm_mode = True
 
 
 class SessionBase(BaseModel):

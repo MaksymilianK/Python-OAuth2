@@ -43,6 +43,10 @@ export default {
   name: "TheSignUp",
   setup() {
     const router = useRouter();
+    if (authService.current) {
+      router.push({name: "home"});
+      return;
+    }
 
     const formModel = new SignUpForm();
     const error = ref("");
@@ -76,7 +80,7 @@ export default {
           .then(res => {
             switch (res.status) {
               case HTTP_OK:
-                router.push("home");
+                router.push({name: "home"});
                 break;
               case HTTP_CONFLICT:
                 if (res.body.detail === ERROR_EMAIL_EXISTS) {

@@ -4,10 +4,10 @@
     <ol class="menu">
       <li v-if="current"><button @click="signOut">Sign out</button></li>
       <template v-else>
-        <li><router-link to="/sign-in">Sign in</router-link></li>
-        <li><router-link to="/sign-up">Sign up</router-link></li>
+        <li><router-link to="sign-in">Sign in</router-link></li>
+        <li><router-link to="sign-up">Sign up</router-link></li>
       </template>
-      <li v-if="current"><router-link to="/add-client">Add client</router-link></li>
+      <li v-if="current"><router-link to="add-client">Add client</router-link></li>
     </ol>
   </header>
 </template>

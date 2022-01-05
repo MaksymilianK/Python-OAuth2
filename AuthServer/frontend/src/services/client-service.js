@@ -6,7 +6,7 @@ export const clientService = {
         const body = new AddClientRequest(
             formModel.name.value,
             formModel.description.value,
-            formModel.redirectURL.value
+            formModel.redirectUrl.value
         );
 
         return httpService.post("/clients", body);

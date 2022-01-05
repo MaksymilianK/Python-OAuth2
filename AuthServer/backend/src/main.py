@@ -6,8 +6,9 @@ from starlette.responses import Response
 
 from src.database import engine, Base
 from src.exceptions import NickExistsException, EmailExistsException, EmailNotExistException, WrongPasswordException, \
-    UserNotAuthenticatedException
-from src.handler.schemas import UserCreateRequest, UserSignInRequest, UserResponse
+    UserNotAuthenticatedException, ClientNameExistsException, ClientRedirectURLExistsException
+from src.handler.schemas import UserCreateRequest, UserSignInRequest, UserResponse, ClientResponse, ClientCreateRequest
+from src.services.client_service import ClientService
 from src.services.user_service import UserService
 
 Base.metadata.create_all(bind=engine)
@@ -51,3 +52,16 @@ def get_current(SID: Optional[str] = Cookie(None), service: UserService = Depend
         return service.get_user(SID)
     except UserNotAuthenticatedException as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)
+
+
+@app.post("/auth/api/clients", response_model=ClientResponse)
+def create_client(client: ClientCreateRequest, SID: Optional[str] = Cookie(None),
+                  service: ClientService = Depends(ClientService)):
+    try:
+        return service.create(client, SID)
+    except UserNotAuthenticatedException as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)
+    except ClientNameExistsException as e:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=e.detail)
+    except ClientRedirectURLExistsException as e:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=e.detail)

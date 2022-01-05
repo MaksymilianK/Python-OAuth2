@@ -1,9 +1,9 @@
-import {ref} from "vue/dist/vue";
+import {ref} from "vue";
 
 export class AddClientForm {
     constructor() {
         this.name = ref("");
         this.description = ref("");
-        this.redirectURL = ref("")
+        this.redirectUrl = ref("")
     }
 }

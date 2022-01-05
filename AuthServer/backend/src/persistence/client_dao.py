@@ -1,4 +1,6 @@
-from src.database import SessionLocal
+from fastapi import Depends
+
+from src.database import SessionLocal, get_db
 from src.database.models import ClientModel
 from src.persistence.objects import Client
 

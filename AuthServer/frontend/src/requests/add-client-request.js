@@ -1,7 +1,7 @@
 export class AddClientRequest{
-    constructor(name, description, redirectURL) {
+    constructor(name, description, redirectUrl) {
         this.name = name;
         this.description = description;
-        this.redirectURL = redirectURL;
+        this.redirectUrl = redirectUrl;
     }
 }

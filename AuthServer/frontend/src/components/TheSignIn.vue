@@ -33,6 +33,10 @@ export default {
   name: "TheSignIn",
   setup() {
     const router = useRouter();
+    if (authService.current) {
+      router.push({name: "home"});
+      return;
+    }
 
     const formModel = new SignInForm();
     const error = ref("");
@@ -56,7 +60,7 @@ export default {
           .then(res => {
             switch (res.status) {
               case HTTP_OK:
-                router.push("home");
+                router.push({name: "home"});
                 break;
               case HTTP_UNAUTHORIZED:
                 if (res.body.detail === ERROR_EMAIL_NOT_EXIST) {

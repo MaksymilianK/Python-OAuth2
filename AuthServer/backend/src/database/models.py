@@ -1,5 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, ForeignKey, Integer, String
 
 from . import Base
 
@@ -34,4 +33,4 @@ class AuthTokenModel(Base):
 
     id = Column(String, primary_key=True, nullable=False)
     owner_nick = Column(String, ForeignKey("users.nick"), index=True)
-    clientName = Column(String, ForeignKey("clients.name"), index=True)
+    client_id = Column(Integer, ForeignKey("clients.id"), index=True)
