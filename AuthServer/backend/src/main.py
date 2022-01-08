@@ -9,7 +9,7 @@ from src.exceptions import NickExistsException, EmailExistsException, EmailNotEx
     UserNotAuthenticatedException, ClientNameExistsException, ClientRedirectURLExistsException, ClientNotFoundException, \
     AuthCodeNotFoundException
 from src.handler.schemas import UserCreateRequest, UserSignInRequest, UserResponse, ClientResponse, ClientCreateRequest, \
-    AuthCodeRequest, AuthCodeResponse, TokenRequest, TokenResponse
+    AuthCodeRequest, AuthCodeResponse, TokenRequest, TokenResponse, TokenRevocationRequest
 from src.services.auth_service import AuthService
 from src.services.client_service import ClientService
 from src.services.user_service import UserService
@@ -91,9 +91,15 @@ def authorize(auth_request: AuthCodeRequest, SID: Optional[str] = Cookie(None), 
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.detail)
 
 
-@app.post("/my-auth/api/auth-token", response_model=TokenResponse)
+@app.post("/my-auth/api/auth-token")
 def get_auth_token(token_request: TokenRequest, service: AuthService = Depends()):
     try:
-        return service.generate_token(token_request.code)
+        token = service.generate_token(token_request.code)
+        return TokenResponse(token=token.token, owner=token.owner.nick)
     except AuthCodeNotFoundException as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)
+
+
+@app.post("/my-auth/api/token-revocation", status_code=204)
+def revoke_token(token_request: TokenRevocationRequest, service: AuthService = Depends()):
+    service.revoke_token(token_request.token)

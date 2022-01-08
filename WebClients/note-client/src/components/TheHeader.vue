@@ -1,30 +1,35 @@
 <template>
   <header class="header">
-    <h1>MyAuth</h1>
+    <h1>MyNote</h1>
     <p v-if="current">{{ current }}</p>
     <ol class="menu">
       <li v-if="current"><button @click="signOut">Sign out</button></li>
-      <template v-else>
-        <li><router-link to="sign-in">Sign in</router-link></li>
-        <li><router-link to="sign-up">Sign up</router-link></li>
-      </template>
-      <li v-if="current"><router-link to="add-client">Add client</router-link></li>
+      <li v-else><a :href="authorizationUrl">Sign in</a></li>
     </ol>
   </header>
 </template>
 
 <script>
-import {userService} from "@/services/user-service";
+import {authService} from "@/services/auth-service";
 import {HTTP_NO_CONTENT} from "@/utils/http-status";
 import {useRouter} from "vue-router";
+import {authServerUrl, CLIENT_ID, REQUIRED_SCOPES} from "@/config";
+import {Oauth2UrlBuilder} from "@/utils/oauth2-url-builder";
 
 export default {
   name: "TheHeader",
   setup() {
     const router = useRouter();
 
+    const authorizationUrl = (new Oauth2UrlBuilder())
+        .addPathSegment(authServerUrl)
+        .addPathSegment("authorization")
+        .addClientIdParam(CLIENT_ID)
+        .addScopeParam(REQUIRED_SCOPES)
+        .build();
+
     function signOut() {
-      userService.signOut()
+      authService.revokeToken()
           .then(res => {
             switch (res.status) {
               case HTTP_NO_CONTENT:
@@ -41,8 +46,9 @@ export default {
     }
 
     return {
-      current: userService.current,
-      signOut
+      current: authService.current,
+      signOut,
+      authorizationUrl
     }
   }
 }
@@ -51,7 +57,7 @@ export default {
 <style scoped>
   .header {
     color: #eee;
-    background-color: #2c3e50;
+    background-color: #37682e;
     padding: 1rem;
     display: flex;
     justify-content: space-between;

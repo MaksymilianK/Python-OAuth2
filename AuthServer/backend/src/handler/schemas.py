@@ -68,8 +68,13 @@ class TokenRequest(BaseModel):
     code: str
 
 
+class TokenRevocationRequest(BaseModel):
+    token: str
+
+
 class TokenResponse(BaseModel):
-    token_id: str = Field(alias="tokenId")
+    token: str = Field(alias="token")
+    owner: str
 
     class Config:
         orm_mode = True

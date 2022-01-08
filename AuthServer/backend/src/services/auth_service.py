@@ -48,3 +48,5 @@ class AuthService:
         self.__token_dao.create(token)
         return token
 
+    def revoke_token(self, token: str):
+        self.__token_dao.delete(token)

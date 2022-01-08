@@ -13,13 +13,13 @@ class TokenDAO:
 
     def create(self, token: AuthToken):
         self.__db.add(TokenModel(
-            token_id=token.token_id,
+            token_id=token.token,
             owner_nick=token.owner.nick,
             client_id=token.client.id,
             scopes=token.scope
         ))
         self.__db.commit()
 
-    def delete(self, token_id: str):
-        self.__db.query(TokenModel).filter(TokenModel.token_id == token_id).delete()
+    def delete(self, token: str):
+        self.__db.query(TokenModel).filter(TokenModel.token_id == token).delete()
         self.__db.commit()
