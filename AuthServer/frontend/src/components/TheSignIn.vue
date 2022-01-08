@@ -23,17 +23,17 @@
 <script>
 import {SignInForm} from "@/models/sign-in-form";
 import {ref} from "vue";
-import {authService} from "@/services/auth-service";
-import {HTTP_OK, HTTP_UNAUTHORIZED} from "@/http-status";
+import {userService} from "@/services/user-service";
+import {HTTP_OK, HTTP_UNAUTHORIZED} from "@/utils/http-status";
 import {useRouter} from "vue-router";
 import {userValidators} from "@/utils/user-validators";
-import {ERROR_EMAIL_NOT_EXIST, ERROR_WRONG_PASSWORD} from "@/error-codes";
+import {ERROR_EMAIL_NOT_EXIST, ERROR_WRONG_PASSWORD} from "@/utils/error-codes";
 
 export default {
   name: "TheSignIn",
   setup() {
     const router = useRouter();
-    if (authService.current) {
+    if (userService.current.value) {
       router.push({name: "home"});
       return;
     }
@@ -56,11 +56,15 @@ export default {
         return;
       }
 
-      authService.signIn(formModel)
+      userService.signIn(formModel)
           .then(res => {
             switch (res.status) {
               case HTTP_OK:
-                router.push({name: "home"});
+                if (router.currentRoute.value.query.client_id) {
+                  router.go(-1);
+                } else {
+                  router.push({name: "home"});
+                }
                 break;
               case HTTP_UNAUTHORIZED:
                 if (res.body.detail === ERROR_EMAIL_NOT_EXIST) {

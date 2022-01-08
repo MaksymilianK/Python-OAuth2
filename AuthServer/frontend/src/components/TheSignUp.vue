@@ -32,18 +32,18 @@
 
 <script>
 import {ref} from "vue";
-import {authService} from "@/services/auth-service";
-import {HTTP_CONFLICT, HTTP_OK} from "@/http-status";
+import {userService} from "@/services/user-service";
+import {HTTP_CONFLICT, HTTP_OK} from "@/utils/http-status";
 import {useRouter} from "vue-router";
 import {SignUpForm} from "@/models/sign-up-form";
 import {userValidators} from "@/utils/user-validators";
-import {ERROR_EMAIL_EXISTS, ERROR_NICK_EXISTS} from "@/error-codes";
+import {ERROR_EMAIL_EXISTS, ERROR_NICK_EXISTS} from "@/utils/error-codes";
 
 export default {
   name: "TheSignUp",
   setup() {
     const router = useRouter();
-    if (authService.current) {
+    if (userService.current.value) {
       router.push({name: "home"});
       return;
     }
@@ -76,11 +76,15 @@ export default {
         return;
       }
 
-      authService.signUp(formModel)
+      userService.signUp(formModel)
           .then(res => {
             switch (res.status) {
               case HTTP_OK:
-                router.push({name: "home"});
+                if (router.currentRoute.value.query["client_id"]) {
+                  router.go(-1);
+                } else {
+                  router.push({name: "home"});
+                }
                 break;
               case HTTP_CONFLICT:
                 if (res.body.detail === ERROR_EMAIL_EXISTS) {

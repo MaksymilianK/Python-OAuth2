@@ -29,8 +29,8 @@
 
 <script>
 import {ref} from "vue";
-import {HTTP_CONFLICT, HTTP_OK, HTTP_UNAUTHORIZED} from "@/http-status";
-import {ERROR_CLIENT_NAME_EXISTS, ERROR_CLIENT_REDIRECT_URL_EXISTS} from "@/error-codes";
+import {HTTP_CONFLICT, HTTP_OK, HTTP_UNAUTHORIZED} from "@/utils/http-status";
+import {ERROR_CLIENT_NAME_EXISTS, ERROR_CLIENT_REDIRECT_URL_EXISTS} from "@/utils/error-codes";
 import {AddClientForm} from "@/models/add-client-form";
 import {clientService} from "@/services/client-service";
 import {clientValidators} from "@/utils/client-validators";

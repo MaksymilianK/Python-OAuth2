@@ -11,13 +11,13 @@
 </template>
 
 <script>
-import {authService} from "@/services/auth-service";
+import {userService} from "@/services/user-service";
 
 export default {
   name: 'TheHome',
   setup() {
     return {
-      current: authService.current
+      current: userService.current
     }
   }
 }

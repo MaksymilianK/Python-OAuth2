@@ -23,3 +23,18 @@ class Session:
         self.id = id
         self.owner = owner
 
+
+class AuthToken:
+    def __init__(self, token_id: str, owner: User, client: Client, scope: list[str]):
+        self.token_id = token_id
+        self.owner = owner
+        self.client = client
+        self.scope = scope
+
+
+class AuthCodeInfo:
+    def __init__(self, code: str, client: Client, scope: list[str], owner: User):
+        self.code = code
+        self.client = client
+        self.scope = scope
+        self.owner = owner

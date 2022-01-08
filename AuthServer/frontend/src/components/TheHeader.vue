@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import {authService} from "@/services/auth-service";
-import {HTTP_NO_CONTENT} from "@/http-status";
+import {userService} from "@/services/user-service";
+import {HTTP_NO_CONTENT} from "@/utils/http-status";
 import {useRouter} from "vue-router";
 
 export default {
@@ -23,11 +23,11 @@ export default {
     const router = useRouter();
 
     function signOut() {
-      authService.signOut()
+      userService.signOut()
           .then(res => {
             switch (res.status) {
               case HTTP_NO_CONTENT:
-                router.push("home");
+                router.push({name: "home"});
                 break;
               default:
                 console.log("Unexpected status!", res.status);
@@ -40,7 +40,7 @@ export default {
     }
 
     return {
-      current: authService.current,
+      current: userService.current,
       signOut
     }
   }

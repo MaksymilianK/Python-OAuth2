@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, ARRAY
 
 from . import Base
 
@@ -28,9 +28,10 @@ class SessionModel(Base):
     owner_nick = Column(String, ForeignKey("users.nick"), index=True)
 
 
-class AuthTokenModel(Base):
-    __tablename__ = "auth_tokens"
+class TokenModel(Base):
+    __tablename__ = "tokens"
 
-    id = Column(String, primary_key=True, nullable=False)
+    token_id = Column(String, primary_key=True, nullable=False)
     owner_nick = Column(String, ForeignKey("users.nick"), index=True)
     client_id = Column(Integer, ForeignKey("clients.id"), index=True)
+    scopes = Column(ARRAY(String))

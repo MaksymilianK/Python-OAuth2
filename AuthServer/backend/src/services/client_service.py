@@ -10,7 +10,7 @@ from src.services.session_service import SessionService
 
 
 class ClientService:
-    def __init__(self, session_service: SessionService = Depends(SessionService), dao: ClientDAO = Depends(ClientDAO)):
+    def __init__(self, session_service: SessionService = Depends(), dao: ClientDAO = Depends()):
         self.__session_service = session_service
         self.__dao = dao
 
@@ -33,3 +33,9 @@ class ClientService:
 
         client.id = self.__dao.create(client)
         return client
+
+    def exists(self, client_id: int) -> bool:
+        return self.__dao.exists(client_id)
+
+    def get_one(self, client_id: int) -> Optional[Client]:
+        return self.__dao.get_one(client_id)

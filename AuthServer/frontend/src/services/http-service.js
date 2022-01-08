@@ -1,4 +1,4 @@
-import {HTTP_NO_CONTENT} from "@/http-status";
+import {HTTP_NO_CONTENT} from "@/utils/http-status";
 
 export const httpService = {
   get(path, queryParams) {
@@ -23,7 +23,7 @@ export const httpService = {
 }
 
 function request(path, method, body = null) {
-  return fetch('http://localhost/auth/api' + path, {
+  return fetch('http://localhost/my-auth/api' + path, {
       method: method,
       headers: {
         'Content-Type': 'application/json; charset=UTF-8'

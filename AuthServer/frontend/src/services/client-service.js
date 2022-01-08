@@ -10,5 +10,9 @@ export const clientService = {
         );
 
         return httpService.post("/clients", body);
+    },
+
+    get_client(clientId) {
+        return httpService.get(`/clients/${clientId}`);
     }
 }

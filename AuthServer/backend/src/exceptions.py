@@ -31,3 +31,13 @@ class ClientNameExistsException(Exception):
 class ClientRedirectURLExistsException(Exception):
     detail = 7
     pass
+
+
+class ClientNotFoundException(Exception):
+    detail = 8
+    pass
+
+
+class AuthCodeNotFoundException(Exception):
+    detail = 9
+    pass
