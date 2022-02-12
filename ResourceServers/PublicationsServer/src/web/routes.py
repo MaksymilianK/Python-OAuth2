@@ -11,7 +11,7 @@ from database import engine, Base
 from exceptions import ClientNotAuthenticatedException, ClientNotAuthorizedException
 from services.introspection_fasade import IntrospectionFacade
 
-from config import WebConfig
+from config import WebConfig, OAuth2Config
 
 Base.metadata.create_all(bind=engine)
 
@@ -24,7 +24,7 @@ async def create_publication(request: Request, publication: PublicationCreateReq
                       introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
                       service: PublicationService = Depends(PublicationService)):
     try:
-        owner = await introspection_facade.check_auth(request, [SCOPE_CREATE_PUBLICATIONS])
+        owner = await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_CREATE_PUBLICATIONS])
         publication_create_response = service.create(publication, owner)
         return PublicationCreateResponse(id=publication_create_response.id, lastEdition=publication_create_response.last_edition)
     except ClientNotAuthenticatedException as e:
@@ -38,7 +38,7 @@ async def delete_publication(request: Request, publication: PublicationDeleteReq
                       introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
                       service: PublicationService = Depends(PublicationService)):
     try:
-        await introspection_facade.check_auth(request, [SCOPE_EDIT_PUBLICATIONS])
+        await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_EDIT_PUBLICATIONS])
         service.delete(publication.id)
     except ClientNotAuthenticatedException as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)
@@ -51,7 +51,7 @@ async def get_all_publications(request: Request,
                         introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
                         service: PublicationService = Depends(PublicationService)):
     try:
-        await introspection_facade.check_auth(request, [SCOPE_READ_PUBLICATIONS])
+        await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_READ_PUBLICATIONS])
         publications = service.get_publications()
         publication_list_response = []
         for publication in publications:
@@ -70,7 +70,7 @@ async def edit_publication(request: Request, publication: PublicationEditRequest
                       introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
                       service: PublicationService = Depends(PublicationService)):
     try:
-        owner = await introspection_facade.check_auth(request, [SCOPE_EDIT_PUBLICATIONS])
+        owner = await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_EDIT_PUBLICATIONS])
         publication_edit_response = service.edit(publication, owner)
         return PublicationEditResponse(lastEdition=publication_edit_response.last_edition)
     except ClientNotAuthenticatedException as e:

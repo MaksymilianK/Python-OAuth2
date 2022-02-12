@@ -10,7 +10,7 @@ from web.schemas import TaskCreateRequest, TaskRequest, TaskCreateResponse, Task
 from services.introspection_fasade import IntrospectionFacade
 from services.task_service import TaskService
 
-from config import WebConfig
+from config import WebConfig, OAuth2Config
 
 Base.metadata.create_all(bind=engine)
 
@@ -23,7 +23,7 @@ async def create_task(request: Request, task: TaskCreateRequest,
                       introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
                       service: TaskService = Depends(TaskService)):
     try:
-        owner = await introspection_facade.check_auth(request, [SCOPE_CREATE_TASKS])
+        owner = await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_CREATE_TASKS])
         res = service.create(task, owner)
 
         return TaskCreateResponse(id=res.id, text=res.text, day=res.day, status=res.status)
@@ -37,7 +37,7 @@ async def create_task(request: Request, task: TaskCreateRequest,
 async def get_tasks(request: Request, introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
                     service: TaskService = Depends(TaskService)):
     try:
-        owner = await introspection_facade.check_auth(request, [SCOPE_READ_TASKS])
+        owner = await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_READ_TASKS])
         tasks = service.get_all(owner)
 
         res = []
@@ -56,7 +56,7 @@ async def get_one_task(request: Request, task_id: int,
                        introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
                        service: TaskService = Depends(TaskService)):
     try:
-        await introspection_facade.check_auth(request, [SCOPE_READ_TASKS])
+        await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_READ_TASKS])
         res = service.get(task_id)
 
         return TaskResponse(id=res.id, text=res.text, day=res.day, status=res.status)
@@ -71,7 +71,7 @@ async def delete_task(request: Request, task_id: int,
                       introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
                       service: TaskService = Depends(TaskService)):
     try:
-        await introspection_facade.check_auth(request, [SCOPE_EDIT_TASKS])
+        await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_EDIT_TASKS])
         service.delete(task_id)
     except ClientNotAuthenticatedException as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)
@@ -84,7 +84,7 @@ async def update_task_status(request: Request, task_id: int, task: TaskRequest,
                              introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
                              service: TaskService = Depends(TaskService)):
     try:
-        await introspection_facade.check_auth(request, [SCOPE_EDIT_TASKS])
+        await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_EDIT_TASKS])
         res = service.update_status(task_id, task)
 
         return TaskUpdateStatusResponse(status=res.status)
