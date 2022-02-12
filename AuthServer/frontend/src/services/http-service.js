@@ -1,8 +1,9 @@
 import {HTTP_NO_CONTENT} from "@/utils/http-status";
+import {backendUrl} from "@/config";
 
 export const httpService = {
   get(path, queryParams) {
-    return request(path + '?' + new URLSearchParams(queryParams), 'GET', null)
+    return request(`${path}?${new URLSearchParams(queryParams)}`, 'GET', null);
   },
 
   post(path, body) {
@@ -23,7 +24,7 @@ export const httpService = {
 }
 
 function request(path, method, body = null) {
-    return fetch('http://localhost:8000/my-auth/api' + path, {
+    return fetch(`${backendUrl}/path`, {
       method: method,
       headers: {
         'Content-Type': 'application/json; charset=UTF-8'

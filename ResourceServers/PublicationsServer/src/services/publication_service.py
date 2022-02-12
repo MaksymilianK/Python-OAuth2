@@ -3,7 +3,7 @@ from typing import List
 
 from fastapi import Depends
 
-from handler.schemas import PublicationCreateRequest, PublicationEditRequest
+from web.schemas import PublicationCreateRequest, PublicationEditRequest
 from persistence.objects import Publication
 from persistence.publication_dao import PublicationDAO
 from services.introspection_fasade import IntrospectionFacade

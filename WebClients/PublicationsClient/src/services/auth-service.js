@@ -5,8 +5,8 @@ import {TokenRevocationRequest} from "@/requests/token-revocation-request";
 import {HTTP_NO_CONTENT, HTTP_OK} from "@/utils/http-status";
 import {TokenRequest} from "@/requests/token-request";
 
-const CURRENT_KEY = "AUTH_USER2";
-const TOKEN_KEY = "AUTH_TOKEN2";
+const CURRENT_KEY = "PUBLICATIONS_AUTH_USER";
+const TOKEN_KEY = "PUBLICATIONS_AUTH_TOKEN";
 
 export const authService = {
 
@@ -22,10 +22,11 @@ export const authService = {
     },
 
     revokeToken() {
-        return httpService.post(`${authServerUrlBackend}/api/token-revocation`, new TokenRevocationRequest(this._token), true)
+        return httpService.post(`${authServerUrlBackend}/token-revocation`, new TokenRevocationRequest(this._token), true)
             .then(res => {
                 if (res.status === HTTP_NO_CONTENT) {
-                    localStorage.clear();
+                    localStorage.removeItem(CURRENT_KEY);
+                    localStorage.removeItem(TOKEN_KEY);
                     this._current.value = null;
                     this._token = null;
                 }
@@ -34,7 +35,7 @@ export const authService = {
     },
 
     get_token(code) {
-        return httpService.post(`${authServerUrlBackend}/api/auth-token`, new TokenRequest(code), true)
+        return httpService.post(`${authServerUrlBackend}/auth-token`, new TokenRequest(code), true)
             .then(res => {
                 if (res.status === HTTP_OK) {
                     localStorage.setItem(CURRENT_KEY, res.body.owner);

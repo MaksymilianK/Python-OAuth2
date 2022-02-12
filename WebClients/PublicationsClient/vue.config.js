@@ -1,4 +1,4 @@
 module.exports = {
-    publicPath: '/my-publication',
-    assetsDir: 'my-publication'
+    publicPath: '/my-publications',
+    assetsDir: 'my-publications'
 }

@@ -1,7 +1,7 @@
 from fastapi import Depends
 from typing import Tuple
 
-from handler.schemas import UserCreateRequest, UserSignInRequest
+from web.schemas import UserCreateRequest, UserSignInRequest
 from persistence.objects import User
 from persistence.user_dao import UserDAO
 from exceptions import NickExistsException, EmailExistsException, EmailNotExistException, WrongPasswordException, \

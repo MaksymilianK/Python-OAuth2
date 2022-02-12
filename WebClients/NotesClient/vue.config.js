@@ -1,4 +1,4 @@
 module.exports = {
-    publicPath: '/my-note',
-    assetsDir: 'my-note'
+    publicPath: '/my-notes',
+    assetsDir: 'my-notes'
 }

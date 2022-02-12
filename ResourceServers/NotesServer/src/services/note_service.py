@@ -4,7 +4,7 @@ from typing import List
 from fastapi import Depends
 
 
-from handler.schemas import NoteCreateRequest, NoteListResponse
+from web.schemas import NoteCreateRequest, NoteListResponse
 from persistence.note_dao import NoteDAO
 from persistence.objects import Note
 from services.introspection_fasade import IntrospectionFacade

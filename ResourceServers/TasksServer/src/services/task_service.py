@@ -1,6 +1,6 @@
 from fastapi import Depends
 
-from handler.schemas import TaskCreateRequest, TaskRequest
+from web.schemas import TaskCreateRequest, TaskRequest
 from persistence.task_dao import TaskDAO
 from persistence.objects import Task
 from services.introspection_fasade import IntrospectionFacade

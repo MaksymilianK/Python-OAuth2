@@ -1,4 +1,4 @@
 module.exports = {
-    publicPath: '/my-auth',
-    assetsDir: 'my-auth'
+    publicPath: "/my-auth",
+    assetsDir: "my-auth"
 }

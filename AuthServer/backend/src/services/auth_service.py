@@ -3,7 +3,7 @@ import secrets
 from fastapi import Depends
 
 from exceptions import UserNotAuthenticatedException, ClientNotFoundException, AuthCodeNotFoundException
-from handler.schemas import AuthCodeRequest
+from web.schemas import AuthCodeRequest
 from persistence.auth_code_dao import AuthCodeDAO
 from persistence.objects import AuthCodeInfo, AuthToken
 from persistence.token_dao import TokenDAO

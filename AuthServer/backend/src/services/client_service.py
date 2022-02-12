@@ -2,7 +2,7 @@ from typing import Optional
 
 from fastapi import Depends
 
-from handler.schemas import ClientCreateRequest
+from web.schemas import ClientCreateRequest
 from persistence.client_dao import ClientDAO
 from persistence.objects import Client
 from exceptions import ClientNameExistsException, ClientRedirectURLExistsException, UserNotAuthenticatedException

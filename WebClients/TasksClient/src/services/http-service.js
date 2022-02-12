@@ -1,7 +1,6 @@
 import { HTTP_NO_CONTENT } from "../utils/http-status";
 import { authService } from "./auth-service";
-
-const HOST = "http://localhost/my-tasks/api";
+import {backendUrl} from "@/config";
 
 export const httpService = {
   get(path, queryParams) {
@@ -26,7 +25,7 @@ export const httpService = {
 }
 
 function request(path, method, body = null, absolute = false) {
-  let host = HOST;
+  let host = backendUrl;
   if (absolute) {
     host = "";
   }
