@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List
 
 from pydantic import Field
 from pydantic.main import BaseModel
@@ -72,6 +72,10 @@ class TokenRevocationRequest(BaseModel):
     token: str
 
 
+class TokenIntrospectionRequest(BaseModel):
+    token: str
+
+
 class TokenResponse(BaseModel):
     token: str = Field(alias="token")
     owner: str
@@ -83,12 +87,12 @@ class TokenResponse(BaseModel):
 class TokenInfoResponse(TokenBase):
     owner: str
     client_id: int = Field(alias="clientId")
-    scope: list[str]
+    scopes: List[str]
 
 
 class AuthCodeRequest(BaseModel):
     client_id: int = Field(alias="clientId")
-    scope: list[str]
+    scope: List[str]
 
 
 class AuthCodeResponse(BaseModel):

@@ -11,4 +11,4 @@ const router = createRouter({
 
 userService.get_current()
     .then(() => createApp(App).use(router).mount('#app'))
-    .catch(() => document.write("Connection error!"));
+    .catch((e) => console.error(e));

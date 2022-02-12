@@ -2,9 +2,9 @@ from typing import Optional
 
 from fastapi import Depends
 
-from src.database import SessionLocal, get_db
-from src.database.models import SessionModel
-from src.persistence.objects import Session, User
+from database import SessionLocal, get_db
+from database.models import SessionModel
+from persistence.objects import Session, User
 
 
 class SessionDAO:

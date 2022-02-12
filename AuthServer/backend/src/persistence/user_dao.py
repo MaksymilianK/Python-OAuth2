@@ -2,9 +2,9 @@ from typing import Optional
 
 from fastapi import Depends
 
-from src.database import SessionLocal, get_db
-from src.database.models import UserModel
-from src.persistence.objects import User
+from database import SessionLocal, get_db
+from database.models import UserModel
+from persistence.objects import User
 
 
 class UserDAO:
@@ -21,7 +21,6 @@ class UserDAO:
         user = self.__db.query(UserModel).filter(UserModel.email == email).first()
         if user is None:
             return None
-
         return User(nick=user.nick, password=user.password_hash)
 
     def create(self, user: User):

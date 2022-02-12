@@ -1,12 +1,13 @@
 from fastapi import Depends
+from typing import Tuple
 
-from src.handler.schemas import UserCreateRequest, UserSignInRequest
-from src.persistence.objects import User
-from src.persistence.user_dao import UserDAO
-from src.exceptions import NickExistsException, EmailExistsException, EmailNotExistException, WrongPasswordException, \
+from handler.schemas import UserCreateRequest, UserSignInRequest
+from persistence.objects import User
+from persistence.user_dao import UserDAO
+from exceptions import NickExistsException, EmailExistsException, EmailNotExistException, WrongPasswordException, \
     UserNotAuthenticatedException
-from src.services.password_service import PasswordService
-from src.services.session_service import SessionService
+from services.password_service import PasswordService
+from services.session_service import SessionService
 
 
 class UserService:
@@ -17,7 +18,7 @@ class UserService:
         self.__session_service = session_service
         self.__dao = dao
 
-    def create(self, user_request: UserCreateRequest) -> tuple[User, str]:
+    def create(self, user_request: UserCreateRequest) -> Tuple[User, str]:
         if self.__dao.exists_with_nick(user_request.nick):
             raise NickExistsException()
         elif self.__dao.exists_with_email(user_request.email):
@@ -32,14 +33,13 @@ class UserService:
         self.__dao.create(user)
         return user, self.__session_service.create(user)
 
-    def sign_in(self, form: UserSignInRequest) -> tuple[User, str]:
+    def sign_in(self, form: UserSignInRequest) -> Tuple[User, str]:
         user = self.__dao.get_one_by_email(form.email)
         if user is None:
             raise EmailNotExistException()
 
         if not self.__password_service.verify(user.password, form.password):
             raise WrongPasswordException()
-
         return user, self.__session_service.create(user)
 
     def sign_out(self, session_id: str):

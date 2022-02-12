@@ -2,11 +2,11 @@ from typing import Optional
 
 from fastapi import Depends
 
-from src.handler.schemas import ClientCreateRequest
-from src.persistence.client_dao import ClientDAO
-from src.persistence.objects import Client
-from src.exceptions import ClientNameExistsException, ClientRedirectURLExistsException, UserNotAuthenticatedException
-from src.services.session_service import SessionService
+from handler.schemas import ClientCreateRequest
+from persistence.client_dao import ClientDAO
+from persistence.objects import Client
+from exceptions import ClientNameExistsException, ClientRedirectURLExistsException, UserNotAuthenticatedException
+from services.session_service import SessionService
 
 
 class ClientService:

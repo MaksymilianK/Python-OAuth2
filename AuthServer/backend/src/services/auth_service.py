@@ -2,13 +2,13 @@ import secrets
 
 from fastapi import Depends
 
-from src.exceptions import UserNotAuthenticatedException, ClientNotFoundException, AuthCodeNotFoundException
-from src.handler.schemas import AuthCodeRequest
-from src.persistence.auth_code_dao import AuthCodeDAO
-from src.persistence.objects import AuthCodeInfo, AuthToken
-from src.persistence.token_dao import TokenDAO
-from src.services.client_service import ClientService
-from src.services.session_service import SessionService
+from exceptions import UserNotAuthenticatedException, ClientNotFoundException, AuthCodeNotFoundException
+from handler.schemas import AuthCodeRequest
+from persistence.auth_code_dao import AuthCodeDAO
+from persistence.objects import AuthCodeInfo, AuthToken
+from persistence.token_dao import TokenDAO
+from services.client_service import ClientService
+from services.session_service import SessionService
 
 
 class AuthService:
@@ -50,3 +50,9 @@ class AuthService:
 
     def revoke_token(self, token: str):
         self.__token_dao.delete(token)
+
+    def introspect_token(self, token: str):
+        token = self.__token_dao.get(token)
+        if token is None:
+            raise UserNotAuthenticatedException
+        return token

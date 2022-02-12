@@ -1,10 +1,8 @@
-from typing import Optional
-
 from fastapi import Depends
 
-from src.database import SessionLocal, get_db
-from src.database.models import TokenModel, SessionModel
-from src.persistence.objects import AuthToken, User
+from database import SessionLocal, get_db
+from database.models import TokenModel, SessionModel
+from persistence.objects import AuthToken, User
 
 
 class TokenDAO:
@@ -23,3 +21,6 @@ class TokenDAO:
     def delete(self, token: str):
         self.__db.query(TokenModel).filter(TokenModel.token_id == token).delete()
         self.__db.commit()
+
+    def get(self, token: str):
+        return self.__db.query(TokenModel).filter(TokenModel.token_id == token).first()

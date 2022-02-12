@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 
 class User:
@@ -25,7 +25,7 @@ class Session:
 
 
 class AuthToken:
-    def __init__(self, token: str, owner: User, client: Client, scope: list[str]):
+    def __init__(self, token: str, owner: User, client: Client, scope: List[str]):
         self.token = token
         self.owner = owner
         self.client = client
@@ -33,7 +33,7 @@ class AuthToken:
 
 
 class AuthCodeInfo:
-    def __init__(self, code: str, client: Client, scope: list[str], owner: User):
+    def __init__(self, code: str, client: Client, scope: List[str], owner: User):
         self.code = code
         self.client = client
         self.scope = scope

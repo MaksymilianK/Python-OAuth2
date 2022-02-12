@@ -23,13 +23,13 @@ export const httpService = {
 }
 
 function request(path, method, body = null) {
-  return fetch('http://localhost/my-auth/api' + path, {
+    return fetch('http://localhost:8000/my-auth/api' + path, {
       method: method,
       headers: {
         'Content-Type': 'application/json; charset=UTF-8'
       },
       credentials: 'include',
-      body: body && JSON.stringify(body, replacer)
+      body: body && JSON.stringify(body, replacer),
     })
     .then(onResponse);
 }

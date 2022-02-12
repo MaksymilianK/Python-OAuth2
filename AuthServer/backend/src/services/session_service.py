@@ -3,8 +3,8 @@ from typing import Optional
 
 from fastapi import Depends
 
-from src.persistence.objects import User, Session
-from src.persistence.session_dao import SessionDAO
+from persistence.objects import User, Session
+from persistence.session_dao import SessionDAO
 
 
 class SessionService:

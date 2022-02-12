@@ -4,25 +4,40 @@ from fastapi import Depends, FastAPI, HTTPException, Cookie
 from starlette import status
 from starlette.responses import Response
 
-from src.database import engine, Base
-from src.exceptions import NickExistsException, EmailExistsException, EmailNotExistException, WrongPasswordException, \
+from database import engine, Base
+from exceptions import NickExistsException, EmailExistsException, EmailNotExistException, WrongPasswordException, \
     UserNotAuthenticatedException, ClientNameExistsException, ClientRedirectURLExistsException, ClientNotFoundException, \
     AuthCodeNotFoundException
-from src.handler.schemas import UserCreateRequest, UserSignInRequest, UserResponse, ClientResponse, ClientCreateRequest, \
-    AuthCodeRequest, AuthCodeResponse, TokenRequest, TokenResponse, TokenRevocationRequest
-from src.services.auth_service import AuthService
-from src.services.client_service import ClientService
-from src.services.user_service import UserService
-
+from handler.schemas import UserCreateRequest, UserSignInRequest, UserResponse, ClientResponse, ClientCreateRequest, \
+    AuthCodeRequest, AuthCodeResponse, TokenRequest, TokenResponse, TokenRevocationRequest, TokenIntrospectionRequest, \
+    TokenInfoResponse
+from services.auth_service import AuthService
+from services.client_service import ClientService
+from services.user_service import UserService
+from fastapi.middleware.cors import CORSMiddleware
 Base.metadata.create_all(bind=engine)
-
+origins = [
+    "http://localhost:8080",
+    "http://localhost:8081",
+    "http://localhost:8082",
+    "http://localhost:8001",
+    "http://localhost:8002",
+]
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.post("/my-auth/api/users", response_model=UserResponse)
-def sign_up(response: Response, user: UserCreateRequest, service: UserService = Depends(UserService)):
+def sign_up(response: Response, form: UserCreateRequest, service: UserService = Depends(UserService)):
+
     try:
-        user, session_id = service.create(user)
+        user, session_id = service.create(form)
         response.set_cookie(key="SID", value=session_id, expires=2147483647)
         return user
     except NickExistsException as e:
@@ -103,3 +118,13 @@ def get_auth_token(token_request: TokenRequest, service: AuthService = Depends()
 @app.post("/my-auth/api/token-revocation", status_code=204)
 def revoke_token(token_request: TokenRevocationRequest, service: AuthService = Depends()):
     service.revoke_token(token_request.token)
+
+
+@app.post("/my-auth/api/token-info", response_model=TokenInfoResponse)
+def introspect_token(token_request: TokenIntrospectionRequest, service: AuthService = Depends()):
+    try:
+        token = service.introspect_token(token_request.token)
+        return TokenInfoResponse(token_id=token.token_id, owner=token.owner_nick,
+                                 clientId=token.client_id, scopes=token.scopes)
+    except UserNotAuthenticatedException as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)

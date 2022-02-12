@@ -1,9 +1,9 @@
-from typing import Optional
+from typing import Optional, Dict
 
-from src.persistence.objects import AuthCodeInfo
+from .objects import AuthCodeInfo
 
 
-AUTH_CODES_INFO: dict[str, AuthCodeInfo] = None
+AUTH_CODES_INFO: Dict[str, AuthCodeInfo] = None
 
 
 class AuthCodeDAO:
