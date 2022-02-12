@@ -1,24 +1,13 @@
 <template>
   <article>
-    <h2>Add client</h2>
+    <h2 class="page-title">Add client</h2>
 
-    <form @submit="addClient">
-      <label>
-        Name
-        <input type="text" v-model="name">
-      </label>
+    <form @submit="addClient" class="form">
+      <BaseInput type="text" label="Name" placeholder="Example_name" v-model="name"></BaseInput>
+      <BaseTextarea v-model="description" label="Description"></BaseTextarea>
+      <BaseInput type="text" label="Redirect URL" placeholder="http://host/path" v-model="redirectUrl"></BaseInput>
 
-      <label>
-        Description
-        <textarea v-model="description"></textarea>
-      </label>
-
-      <label>
-        Redirect URL
-        <input type="text" v-model="redirectUrl">
-      </label>
-
-      <button type="submit">Add client</button>
+      <BaseButton type="submit">Add client</BaseButton>
     </form>
 
     <p v-if="error" class="error">{{ error }}</p>
@@ -34,9 +23,13 @@ import {ERROR_CLIENT_NAME_EXISTS, ERROR_CLIENT_REDIRECT_URL_EXISTS} from "@/util
 import {AddClientForm} from "@/models/add-client-form";
 import {clientService} from "@/services/client-service";
 import {clientValidators} from "@/utils/client-validators";
+import BaseInput from "@/components/base/BaseInput";
+import BaseTextarea from "@/components/base/BaseTextarea";
+import BaseButton from "@/components/base/BaseButton";
 
 export default {
   name: "TheAddClient",
+  components: {BaseInput, BaseTextarea, BaseButton},
   setup() {
     const formModel = new AddClientForm();
     const error = ref("");
@@ -105,6 +98,7 @@ export default {
 
 <style scoped>
   .client-id {
+    text-align: center;
     font-size: 2rem;
     margin-top: 2rem;
   }

@@ -1,21 +1,24 @@
 <template>
   <article>
-    <h2>Authorize</h2>
+    <h2 class="page-title">Authorize</h2>
 
-    <p v-if="error">{{ error }}</p>
+    <p v-if="error" class="error">{{ error }}</p>
 
-    <section>
-      <h3>Client {{ name }}</h3>
-      <p>{{ description }}</p>
-    </section>
-    <section>
-      <h3>Requested permissions</h3>
-      <ul>
-        <li v-for="scope of requestedScopes" :key="scope">{{ scopesDescriptions[scope] }}</li>
-      </ul>
-    </section>
+    <div class="main">
+      <section class="section">
+        <h3 class="section-title">Client {{ name }}</h3>
+        <p class="section-text">{{ description }}</p>
+      </section>
+      <section class="section">
+        <h3 class="section-title">Requested permissions</h3>
+        <ul class="section-text">
+          <li v-for="scope of requestedScopes" :key="scope">{{ scopesDescriptions[scope] }}</li>
+        </ul>
+      </section>
 
-    <button v-if="!error" @click="authorize">Authorize</button>
+      <BaseButton v-if="!error" @click="authorize">Authorize</BaseButton>
+      <BaseButton v-if="!error" @click="cancel" class="cancel-button">Cancel</BaseButton>
+    </div>
   </article>
 </template>
 
@@ -29,9 +32,11 @@ import {clientService} from "@/services/client-service";
 import {authService} from "@/services/auth-service";
 import {AuthorizationRequest} from "@/requests/authorization-request";
 import {userService} from "@/services/user-service";
+import BaseButton from "@/components/base/BaseButton";
 
 export default {
   name: "TheAuthorization",
+  components: {BaseButton},
   setup() {
     const router = useRouter();
     const query = router.currentRoute.value.query;
@@ -92,7 +97,11 @@ export default {
                 error.value = "Unexpected HTTP status!";
                 break;
             }
-          })
+          });
+    }
+
+    function cancel() {
+      authService.redirectToClient(client.redirectUrl.value, "");
     }
 
     return {
@@ -100,12 +109,36 @@ export default {
       requestedScopes,
       scopesDescriptions,
       error,
-      authorize
+      authorize,
+      cancel
     }
   }
 }
 </script>
 
 <style scoped>
+  .main {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    gap: 2rem;
+  }
 
+  .section-title {
+    text-align: center;
+    font-size: 1.5rem;
+  }
+
+  .section-text {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+
+  .cancel-button {
+    background-color: #4b4b4b;
+  }
+
+  .cancel-button:not(:disabled):hover, .cancel-button:not(:disabled):focus, .cancel-button:not(:disabled):active {
+    background-color: #3a3a3a;
+  }
 </style>

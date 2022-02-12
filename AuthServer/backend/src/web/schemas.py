@@ -46,7 +46,7 @@ class ClientIdResponse(BaseModel):
 
 class ClientResponse(ClientBase):
     id: int
-    name: str
+    redirect_url: str = Field(alias="redirectUrl")
 
     class Config:
         orm_mode = True

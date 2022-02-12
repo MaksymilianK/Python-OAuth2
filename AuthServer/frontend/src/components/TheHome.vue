@@ -1,6 +1,6 @@
 <template>
   <article>
-    <h2>Home</h2>
+    <h2 class="page-title">Home</h2>
     <p v-if="current" class="login-status">
       Status: zalogowany
     </p>
@@ -25,6 +25,7 @@ export default {
 
 <style scoped>
   .login-status {
+    font-size: 1.5rem;
     text-align: center;
   }
 </style>

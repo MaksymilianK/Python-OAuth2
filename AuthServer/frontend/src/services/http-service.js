@@ -24,7 +24,7 @@ export const httpService = {
 }
 
 function request(path, method, body = null) {
-    return fetch(`${backendUrl}/path`, {
+    return fetch(`${backendUrl}${path}`, {
       method: method,
       headers: {
         'Content-Type': 'application/json; charset=UTF-8'

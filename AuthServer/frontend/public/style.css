@@ -9,10 +9,43 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0;
 }
 
-h2 {
-    text-align: center;
+a {
+    text-decoration: none;
+    color: inherit;
 }
 
-h2 {
-    padding: 2rem 0;
+.page-title {
+    font-size: 2.5rem;
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.page-title::before, .page-title::after {
+    content: '';
+    height: 0.2rem;
+    width: 7rem;
+    display: inline-block;
+    background-color: #000;
+    position: relative;
+}
+
+.page-title::before {
+    transform: translate(-0.8rem, -0.6rem);
+}
+
+.page-title::after {
+    transform: translate(0.8rem, -0.6rem);
+}
+
+.form {
+    display: flex;
+    flex-flow: column;
+    gap: 2rem;
+    align-items: center;
+}
+
+.error {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #dd0000;
 }

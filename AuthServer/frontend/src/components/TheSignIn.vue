@@ -1,19 +1,12 @@
 <template>
   <article>
-    <h2>Sign in</h2>
+    <h2 class="page-title">Sign in</h2>
 
-    <form @submit="signIn">
-      <label>
-        Email
-        <input type="email" v-model="email">
-      </label>
+    <form @submit="signIn" class="form">
+      <BaseInput type="email" label="Email" placeholder="example@example.com" v-model="email"></BaseInput>
+      <BaseInput type="password" label="Password" v-model="password"></BaseInput>
 
-      <label>
-        Password
-        <input type="password" v-model="password">
-      </label>
-
-      <button type="submit">Sign in</button>
+      <BaseButton type="submit">Sign in</BaseButton>
     </form>
 
     <p v-if="error" class="error">{{ error }}</p>
@@ -28,9 +21,12 @@ import {HTTP_OK, HTTP_UNAUTHORIZED} from "@/utils/http-status";
 import {useRouter} from "vue-router";
 import {userValidators} from "@/utils/user-validators";
 import {ERROR_EMAIL_NOT_EXIST, ERROR_WRONG_PASSWORD} from "@/utils/error-codes";
+import BaseInput from "@/components/base/BaseInput";
+import BaseButton from "@/components/base/BaseButton";
 
 export default {
   name: "TheSignIn",
+  components: {BaseInput, BaseButton},
   setup() {
     const router = useRouter();
     if (userService.current.value) {

@@ -1,29 +1,14 @@
 <template>
   <article>
-    <h2>Sign up</h2>
+    <h2 class="page-title">Sign up</h2>
 
-    <form @submit="signUp">
-      <label>
-        Nick
-        <input type="text" v-model="nick">
-      </label>
+    <form @submit="signUp" class="form">
+      <BaseInput type="text" label="Nick" v-model="nick"></BaseInput>
+      <BaseInput type="email" label="Email" v-model="email"></BaseInput>
+      <BaseInput type="password" label="Password" v-model="password"></BaseInput>
+      <BaseInput type="password" label="Repeat password" v-model="repeatPassword"></BaseInput>
 
-      <label>
-        Email
-        <input type="email" v-model="email">
-      </label>
-
-      <label>
-        Password
-        <input type="password" v-model="password">
-      </label>
-
-      <label>
-        Repeat password
-        <input type="password" v-model="repeatPassword">
-      </label>
-
-      <button type="submit">Sign up</button>
+      <BaseButton type="submit">Sign up</BaseButton>
     </form>
 
     <p v-if="error" class="error">{{ error }}</p>
@@ -38,9 +23,12 @@ import {useRouter} from "vue-router";
 import {SignUpForm} from "@/models/sign-up-form";
 import {userValidators} from "@/utils/user-validators";
 import {ERROR_EMAIL_EXISTS, ERROR_NICK_EXISTS} from "@/utils/error-codes";
+import BaseButton from "@/components/base/BaseButton";
+import BaseInput from "@/components/base/BaseInput";
 
 export default {
   name: "TheSignUp",
+  components: {BaseInput, BaseButton},
   setup() {
     const router = useRouter();
     if (userService.current.value) {

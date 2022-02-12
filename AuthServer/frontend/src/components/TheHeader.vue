@@ -1,14 +1,17 @@
 <template>
   <header class="header">
-    <h1>MyAuth</h1>
-    <p v-if="current">{{ current }}</p>
+    <h1><router-link to="/">MyAuth</router-link></h1>
+    <div v-if="current" class="user-container">
+      <img alt="" src="@/assets/user.svg" class="user-img">
+      <p v-if="current" class="user-text">{{ current }}</p>
+    </div>
     <ol class="menu">
-      <li v-if="current"><button @click="signOut">Sign out</button></li>
+      <li v-if="current"><BaseButton @click="signOut">Sign out</BaseButton></li>
       <template v-else>
-        <li><router-link to="sign-in">Sign in</router-link></li>
-        <li><router-link to="sign-up">Sign up</router-link></li>
+        <li><BaseButton to="sign-in">Sign in</BaseButton></li>
+        <li><BaseButton to="sign-up">Sign up</BaseButton></li>
       </template>
-      <li v-if="current"><router-link to="add-client">Add client</router-link></li>
+      <li v-if="current"><BaseButton to="add-client">Add client</BaseButton></li>
     </ol>
   </header>
 </template>
@@ -17,9 +20,11 @@
 import {userService} from "@/services/user-service";
 import {HTTP_NO_CONTENT} from "@/utils/http-status";
 import {useRouter} from "vue-router";
+import BaseButton from "@/components/base/BaseButton";
 
 export default {
   name: "TheHeader",
+  components: {BaseButton},
   setup() {
     const router = useRouter();
 
@@ -49,10 +54,16 @@ export default {
 </script>
 
 <style scoped>
+  .user-container {
+    display: flex;
+    gap: 1rem;
+    font-size: 1.4rem;
+  }
+
   .header {
     color: #eee;
     background-color: #2c3e50;
-    padding: 1rem;
+    padding: 0.5rem 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
