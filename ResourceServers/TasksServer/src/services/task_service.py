@@ -7,8 +7,7 @@ from services.introspection_fasade import IntrospectionFacade
 
 
 class TaskService:
-    def __init__(self, introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
-                 dao: TaskDAO = Depends(TaskDAO)):
+    def __init__(self, introspection_facade: IntrospectionFacade = Depends(), dao: TaskDAO = Depends()):
         self.__introspection_facade = introspection_facade
         self.__dao = dao
 
@@ -24,38 +23,13 @@ class TaskService:
         return task
 
     def get_all(self, owner: str) -> list[Task]:
-        task_models = self.__dao.get_all(owner)
-
-        tasks = []
-        for task_model in task_models:
-            task = Task(
-                id=task_model.id,
-                text=task_model.text,
-                day=task_model.day,
-                status=task_model.status,
-            )
-            tasks.append(task)
-
-        return tasks
+        return self.__dao.get_all(owner)
 
     def get(self, task_id: int) -> Task:
-        task_model = self.__dao.get(task_id)
-
-        task = Task(
-            id=task_model.id,
-            text=task_model.text,
-            day=task_model.day,
-            status=task_model.status,
-        )
-        return task
+        return self.__dao.get(task_id)
 
     def delete(self, task_id: int):
         self.__dao.delete(task_id)
 
     def update_status(self, task_id: int, task_request: TaskRequest) -> Task:
-        task = Task(status=task_request.status)
-        task_model = self.__dao.update_status(task_id, task)
-
-        task.status = task_model.status
-
-        return task
+        return self.__dao.update_status(task_id, task_request.status)

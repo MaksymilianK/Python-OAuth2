@@ -1,10 +1,10 @@
 <template>
   <header class="header">
-    <h1>MyNote</h1>
+    <h1>MyNotes</h1>
     <p v-if="current">{{ current }}</p>
     <ol class="menu">
-      <li v-if="current"><button @click="signOut">Sign out</button></li>
-      <li v-else><a :href="authorizationUrl">Sign in</a></li>
+      <li v-if="current"><BaseButton @click="signOut">Sign out</BaseButton></li>
+      <li v-else><BaseButton :href="authorizationUrl">Sign in</BaseButton></li>
     </ol>
   </header>
 </template>
@@ -15,9 +15,11 @@ import {HTTP_NO_CONTENT} from "@/utils/http-status";
 import {useRouter} from "vue-router";
 import {authServerUrl, CLIENT_ID, REQUIRED_SCOPES} from "@/config";
 import {Oauth2UrlBuilder} from "@/utils/oauth2-url-builder";
+import BaseButton from "@/components/BaseButton";
 
 export default {
   name: "TheHeader",
+  components: {BaseButton},
   setup() {
     const router = useRouter();
 

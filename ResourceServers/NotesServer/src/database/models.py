@@ -11,11 +11,3 @@ class NoteModel(Base):
     content = Column(String, nullable=False)
     owner = Column(String, index=True, nullable=False)
     last_edition = Column(DateTime, index=True, nullable=False)
-
-
-class UserModel(Base):
-    __tablename__ = "users"
-
-    nick = Column(String, primary_key=True, nullable=False)
-    email = Column(String, unique=True, index=True, nullable=False)
-    password_hash = Column(String, nullable=False)

@@ -6,8 +6,8 @@ from typing import List
 
 
 class NoteBase(BaseModel):
-    title: str
-    content: str
+    title: str = Field(min_length=1, max_length=30)
+    content: str = Field(min_length=1, max_length=250)
 
 
 class NoteCreateRequest(NoteBase):

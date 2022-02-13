@@ -19,9 +19,8 @@ app = FastAPI()
 
 
 @app.post(WebConfig.ROUTE_PREFIX + '/tasks', status_code=HTTP_201_CREATED, response_model=TaskCreateResponse)
-async def create_task(request: Request, task: TaskCreateRequest,
-                      introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
-                      service: TaskService = Depends(TaskService)):
+async def create_task(request: Request, task: TaskCreateRequest, introspection_facade: IntrospectionFacade = Depends(),
+                      service: TaskService = Depends()):
     try:
         owner = await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_CREATE_TASKS])
         res = service.create(task, owner)
@@ -34,8 +33,8 @@ async def create_task(request: Request, task: TaskCreateRequest,
 
 
 @app.get(WebConfig.ROUTE_PREFIX + '/tasks', status_code=HTTP_200_OK, response_model=TaskListResponse)
-async def get_tasks(request: Request, introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
-                    service: TaskService = Depends(TaskService)):
+async def get_tasks(request: Request, introspection_facade: IntrospectionFacade = Depends(),
+                    service: TaskService = Depends()):
     try:
         owner = await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_READ_TASKS])
         tasks = service.get_all(owner)
@@ -52,9 +51,8 @@ async def get_tasks(request: Request, introspection_facade: IntrospectionFacade 
 
 
 @app.get(WebConfig.ROUTE_PREFIX + '/tasks/{task_id}', status_code=HTTP_200_OK, response_model=TaskResponse)
-async def get_one_task(request: Request, task_id: int,
-                       introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
-                       service: TaskService = Depends(TaskService)):
+async def get_one_task(request: Request, task_id: int, introspection_facade: IntrospectionFacade = Depends(),
+                       service: TaskService = Depends()):
     try:
         await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_READ_TASKS])
         res = service.get(task_id)
@@ -67,9 +65,8 @@ async def get_one_task(request: Request, task_id: int,
 
 
 @app.delete(WebConfig.ROUTE_PREFIX + '/tasks/{task_id}', status_code=HTTP_204_NO_CONTENT)
-async def delete_task(request: Request, task_id: int,
-                      introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
-                      service: TaskService = Depends(TaskService)):
+async def delete_task(request: Request, task_id: int, introspection_facade: IntrospectionFacade = Depends(),
+                      service: TaskService = Depends()):
     try:
         await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_EDIT_TASKS])
         service.delete(task_id)
@@ -81,8 +78,8 @@ async def delete_task(request: Request, task_id: int,
 
 @app.put(WebConfig.ROUTE_PREFIX + '/tasks/{task_id}', status_code=HTTP_200_OK, response_model=TaskUpdateStatusResponse)
 async def update_task_status(request: Request, task_id: int, task: TaskRequest,
-                             introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
-                             service: TaskService = Depends(TaskService)):
+                             introspection_facade: IntrospectionFacade = Depends(),
+                             service: TaskService = Depends()):
     try:
         await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_EDIT_TASKS])
         res = service.update_status(task_id, task)

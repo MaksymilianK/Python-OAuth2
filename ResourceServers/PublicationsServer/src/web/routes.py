@@ -21,8 +21,8 @@ app = FastAPI()
 
 @app.post(f"{WebConfig.ROUTE_PREFIX}/add-publication", status_code=HTTP_201_CREATED, response_model=PublicationCreateResponse)
 async def create_publication(request: Request, publication: PublicationCreateRequest,
-                      introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
-                      service: PublicationService = Depends(PublicationService)):
+                      introspection_facade: IntrospectionFacade = Depends(),
+                      service: PublicationService = Depends()):
     try:
         owner = await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_CREATE_PUBLICATIONS])
         publication_create_response = service.create(publication, owner)
@@ -35,8 +35,8 @@ async def create_publication(request: Request, publication: PublicationCreateReq
 
 @app.delete(f"{WebConfig.ROUTE_PREFIX}/delete-publication", status_code=HTTP_204_NO_CONTENT)
 async def delete_publication(request: Request, publication: PublicationDeleteRequest,
-                      introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
-                      service: PublicationService = Depends(PublicationService)):
+                      introspection_facade: IntrospectionFacade = Depends(),
+                      service: PublicationService = Depends()):
     try:
         await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_EDIT_PUBLICATIONS])
         service.delete(publication.id)
@@ -47,9 +47,8 @@ async def delete_publication(request: Request, publication: PublicationDeleteReq
 
 
 @app.get(f"{WebConfig.ROUTE_PREFIX}/get-publications", status_code=HTTP_200_OK, response_model=PublicationListResponse)
-async def get_all_publications(request: Request,
-                        introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
-                        service: PublicationService = Depends(PublicationService)):
+async def get_all_publications(request: Request, introspection_facade: IntrospectionFacade = Depends(),
+                        service: PublicationService = Depends()):
     try:
         await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_READ_PUBLICATIONS])
         publications = service.get_publications()
@@ -67,8 +66,8 @@ async def get_all_publications(request: Request,
 
 @app.put(f"{WebConfig.ROUTE_PREFIX}/edit-publication", status_code=HTTP_200_OK, response_model=PublicationEditResponse)
 async def edit_publication(request: Request, publication: PublicationEditRequest,
-                      introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
-                      service: PublicationService = Depends(PublicationService)):
+                      introspection_facade: IntrospectionFacade = Depends(),
+                      service: PublicationService = Depends()):
     try:
         owner = await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_EDIT_PUBLICATIONS])
         publication_edit_response = service.edit(publication, owner)

@@ -1,0 +1,9 @@
+#!/bin/bash
+screen -d -m -S myauthback bash -c 'cd AuthServer/backend && ./run'
+screen -d -m -S myauthfront bash -c 'cd AuthServer/frontend && ./run'
+screen -d -m -S mynotesback bash -c 'cd ResourceServers/NotesServer && ./run'
+screen -d -m -S mypubsback bash -c 'cd ResourceServers/PublicationsServer && ./run'
+screen -d -m -S mytasksback bash -c 'cd ResourceServers/TasksServer && ./run'
+screen -d -m -S mynotesfront bash -c 'cd WebClients/NotesClient && ./run'
+screen -d -m -S mypubsfront bash -c 'cd WebClients/PublicationsClient && ./run'
+screen -d -m -S mytasksfront bash -c 'cd WebClients/TasksClient && ./run'

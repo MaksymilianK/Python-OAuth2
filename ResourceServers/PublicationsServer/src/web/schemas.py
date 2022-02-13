@@ -6,7 +6,7 @@ from typing import List
 
 
 class PublicationBase(BaseModel):
-    content: str
+    content: str = Field(min_length=1, max_length=250)
 
 
 class PublicationCreateRequest(PublicationBase):
@@ -19,7 +19,7 @@ class PublicationDeleteRequest(BaseModel):
 
 class PublicationEditRequest(BaseModel):
     id: int
-    content: str
+    content: str = Field(min_length=1, max_length=250)
 
 
 class PublicationCreateResponse(BaseModel):

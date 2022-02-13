@@ -15,3 +15,7 @@ class WebConfig:
         "http://185.218.125.97:8082",
         "http://185.218.125.97:8083"
     ]
+
+
+class OAuth2Config:
+    AUTH_CODE_LIFETIME = 60

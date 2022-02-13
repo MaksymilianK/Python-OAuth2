@@ -8,9 +8,8 @@ from services.token_reader import TokenReader
 
 
 class IntrospectionFacade:
-    def __init__(self, token_reader: TokenReader = Depends(TokenReader),
-                 service: IntrospectionService = Depends(IntrospectionService),
-                 scope_checker: ScopeChecker = Depends(ScopeChecker)):
+    def __init__(self, token_reader: TokenReader = Depends(), service: IntrospectionService = Depends(),
+                 scope_checker: ScopeChecker = Depends()):
         self.__token_reader = token_reader
         self.__service = service
         self.__scope_checker = scope_checker

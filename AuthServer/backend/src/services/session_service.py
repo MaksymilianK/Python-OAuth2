@@ -10,7 +10,7 @@ from persistence.session_dao import SessionDAO
 class SessionService:
     SESSION_ID_LEN = 32
 
-    def __init__(self, dao: SessionDAO = Depends(SessionDAO)):
+    def __init__(self, dao: SessionDAO = Depends()):
         self.__dao = dao
 
     def create(self, owner: User) -> str:

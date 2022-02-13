@@ -4,13 +4,17 @@ from pydantic import Field
 from pydantic.main import BaseModel
 
 
+NICK_REGEX = r"^\w{3,16}$"
+EMAIL_REGEX = r"^\S+@\S+(\.\S+)+$"
+
+
 class UserBase(BaseModel):
-    nick: str
+    nick: str = Field(regex=NICK_REGEX)
 
 
 class UserCreateRequest(UserBase):
-    email: str
-    password: str
+    email: str = Field(regex=EMAIL_REGEX)
+    password: str = Field(min_length=7, max_length=100)
 
 
 class UserResponse(UserBase):
@@ -19,8 +23,8 @@ class UserResponse(UserBase):
 
 
 class UserSignInRequest(BaseModel):
-    email: str
-    password: str
+    email: str = Field(regex=EMAIL_REGEX)
+    password: str = Field(min_length=7, max_length=100)
 
 
 class ExceptionResponse(BaseModel):
@@ -34,7 +38,7 @@ class ClientBase(BaseModel):
 
 
 class ClientCreateRequest(ClientBase):
-    redirect_url: str = Field(alias="redirectUrl")
+    redirect_url: str = Field(alias="redirectUrl", min_length=1)
 
 
 class ClientIdResponse(BaseModel):

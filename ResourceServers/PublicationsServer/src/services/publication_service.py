@@ -10,8 +10,7 @@ from services.introspection_fasade import IntrospectionFacade
 
 
 class PublicationService:
-    def __init__(self, introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
-                 dao: PublicationDAO = Depends(PublicationDAO)):
+    def __init__(self, introspection_facade: IntrospectionFacade = Depends(), dao: PublicationDAO = Depends()):
         self.__introspection_facade = introspection_facade
         self.__dao = dao
 

@@ -1,3 +1,4 @@
+import asyncio
 import secrets
 
 from fastapi import Depends
@@ -9,6 +10,8 @@ from persistence.objects import AuthCodeInfo, AuthToken
 from persistence.token_dao import TokenDAO
 from services.client_service import ClientService
 from services.session_service import SessionService
+
+from config import OAuth2Config
 
 
 class AuthService:
@@ -35,6 +38,9 @@ class AuthService:
 
         auth_code_info = AuthCodeInfo(code, client, auth_request.scope, user)
         self.__code_dao.store(auth_code_info)
+
+        asyncio.get_event_loop().call_later(OAuth2Config.AUTH_CODE_LIFETIME, lambda: self.__code_dao.delete(code))
+
         return auth_code_info
 
     def generate_token(self, code: str) -> AuthToken:

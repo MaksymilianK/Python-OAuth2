@@ -11,8 +11,7 @@ from services.introspection_fasade import IntrospectionFacade
 
 
 class NoteService:
-    def __init__(self, introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
-                 dao: NoteDAO = Depends(NoteDAO)):
+    def __init__(self, introspection_facade: IntrospectionFacade = Depends(), dao: NoteDAO = Depends()):
         self.__introspection_facade = introspection_facade
         self.__dao = dao
 

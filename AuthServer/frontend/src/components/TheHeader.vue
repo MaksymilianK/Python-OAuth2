@@ -62,7 +62,7 @@ export default {
 
   .header {
     color: #eee;
-    background-color: #2c3e50;
+    background-color: #472c50;
     padding: 0.5rem 1.5rem;
     display: flex;
     justify-content: space-between;

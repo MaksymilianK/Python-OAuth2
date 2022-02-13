@@ -4,7 +4,7 @@ from fastapi import Depends
 
 
 class PasswordService:
-    def __init__(self, password_hasher: PasswordHasher = Depends(PasswordHasher)):
+    def __init__(self, password_hasher: PasswordHasher = Depends()):
         self.__password_hasher = password_hasher
 
     def generate_hash(self, password: str):

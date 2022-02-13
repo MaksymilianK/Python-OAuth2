@@ -17,10 +17,3 @@ class AuthTokenInfo:
         self.owner = owner
         self.client_id = client_id
         self.scopes = scopes
-
-
-class User:
-    def __init__(self, nick: Optional[str] = None, email: Optional[str] = None, password: Optional[str] = None):
-        self.nick = nick
-        self.email = email
-        self.password = password

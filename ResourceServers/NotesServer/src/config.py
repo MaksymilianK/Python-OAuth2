@@ -13,6 +13,7 @@ class WebConfig:
 
 
 class OAuth2Config:
+    INTROSPECTION_ENDPOINT = "http://185.218.125.97/my-auth/api/token-info"
     SCOPE_READ_NOTES = "NOTES_READ"
     SCOPE_CREATE_NOTES = "NOTES_CREATE"
     SCOPE_EDIT_NOTES = "NOTES_EDIT"

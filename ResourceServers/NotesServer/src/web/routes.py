@@ -8,7 +8,6 @@ from exceptions import ClientNotAuthenticatedException, ClientNotAuthorizedExcep
 from .schemas import NoteCreateRequest, NoteResponse, NoteListResponse, NoteCreateResponse, NoteDeleteRequest
 from services.introspection_fasade import IntrospectionFacade
 from services.note_service import NoteService
-from fastapi.middleware.cors import CORSMiddleware
 
 from config import OAuth2Config, WebConfig
 
@@ -20,9 +19,8 @@ app = FastAPI()
 
 
 @app.post(f"{WebConfig.ROUTE_PREFIX}/add-note", status_code=HTTP_201_CREATED, response_model=NoteCreateResponse)
-async def create_note(request: Request, note: NoteCreateRequest,
-                      introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
-                      service: NoteService = Depends(NoteService)):
+async def create_note(request: Request, note: NoteCreateRequest, introspection_facade: IntrospectionFacade = Depends(),
+                      service: NoteService = Depends()):
     try:
         owner = await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_CREATE_NOTES])
         note_create_response = service.create(note, owner)
@@ -34,9 +32,8 @@ async def create_note(request: Request, note: NoteCreateRequest,
 
 
 @app.delete(f"{WebConfig.ROUTE_PREFIX}/delete-note", status_code=HTTP_204_NO_CONTENT)
-async def delete_note(request: Request, note: NoteDeleteRequest,
-                      introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
-                      service: NoteService = Depends(NoteService)):
+async def delete_note(request: Request, note: NoteDeleteRequest, introspection_facade: IntrospectionFacade = Depends(),
+                      service: NoteService = Depends()):
     try:
         await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_EDIT_NOTES])
         service.delete(note.id)
@@ -47,9 +44,8 @@ async def delete_note(request: Request, note: NoteDeleteRequest,
 
 
 @app.get(f"{WebConfig.ROUTE_PREFIX}/get-notes", status_code=HTTP_200_OK, response_model=NoteListResponse)
-async def get_all_notes(request: Request,
-                        introspection_facade: IntrospectionFacade = Depends(IntrospectionFacade),
-                        service: NoteService = Depends(NoteService)):
+async def get_all_notes(request: Request, introspection_facade: IntrospectionFacade = Depends(),
+                        service: NoteService = Depends()):
     try:
         owner = await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_READ_NOTES])
         notes = service.get_notes(owner)

@@ -11,9 +11,8 @@ from services.session_service import SessionService
 
 
 class UserService:
-    def __init__(self, password_service: PasswordService = Depends(PasswordService),
-                 session_service: SessionService = Depends(SessionService),
-                 dao: UserDAO = Depends(UserDAO)):
+    def __init__(self, password_service: PasswordService = Depends(), session_service: SessionService = Depends(),
+                 dao: UserDAO = Depends()):
         self.__password_service = password_service
         self.__session_service = session_service
         self.__dao = dao
