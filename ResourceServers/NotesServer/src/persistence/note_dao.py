@@ -3,8 +3,8 @@ from typing import Optional, List
 from fastapi import Depends
 
 from database import SessionLocal, get_db
-from database.models import NoteModel, UserModel
-from persistence.objects import Note, User
+from database.models import NoteModel
+from persistence.objects import Note
 
 
 class NoteDAO:

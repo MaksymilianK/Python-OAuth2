@@ -1,8 +1,8 @@
 from fastapi import Depends
 
 from database import SessionLocal, get_db
-from database.models import TaskModel, UserModel
-from persistence.objects import Task, User
+from database.models import TaskModel
+from persistence.objects import Task
 
 
 class TaskDAO:
