@@ -32,9 +32,9 @@ class TaskDAO:
         self.__db.commit()
 
     def update_status(self, task_id: int, new_status: bool) -> Task:
-        task = self.get_one(task_id)
+        task_model = self.__db.query(TaskModel).filter(TaskModel.id == task_id).one()
 
-        task.status = new_status
+        task_model.status = new_status
         self.__db.commit()
 
-        return task
+        return Task(task_model.id, task_model.text, task_model.day, task_model.status, task_model.owner)
