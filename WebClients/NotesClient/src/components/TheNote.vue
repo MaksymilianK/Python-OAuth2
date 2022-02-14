@@ -20,12 +20,12 @@
       <h5 class="right">last edit: {{item.editDate}}</h5>
       <h3>{{item.title}}</h3>
       <div class="left">
-      <p class="multiline" v-if="item.develop">{{item.note}}</p>
+      <p class="multiline" v-if="item.show">{{item.note}}</p>
       
       </div>
       </div>
-      <button v-if="!item.develop && !item.edit" @click="developItem(item.id)">develop</button>
-      <button v-if="item.develop && !item.edit" @click="hideItem(item.id)">hide</button>
+      <button v-if="!item.show && !item.edit" @click="showItem(item.id)">show</button>
+      <button v-if="item.show && !item.edit" @click="hideItem(item.id)">hide</button>
       <button v-if="!item.edit && !editing" @click="editItem(item.id)">edit</button>
       <button v-if="item.edit" @click="saveItem(item.id, editTitle, editNote, 'editNote')">save</button>
       <button v-if="item.edit" @click="removeItem(item.id)">delete</button> 
@@ -62,7 +62,7 @@ export default {
                     this.items.push({
                       title: note.title,
                       note: note.content,
-                      develop: false,
+                      show: false,
                       edit: false,
                       editDate: note.lastEdition,
                       id: note.id
@@ -153,7 +153,7 @@ export default {
       this.items.push({
         title: noteTitle,
         note: noteContent,
-        develop: false,
+        show: false,
         edit: false,
         editDate: res.body.lastEdition,
         id: res.body.id
@@ -201,13 +201,13 @@ export default {
       {this.editing = false}
       this.items.splice(index, 1)
     },
-    developItem(id){
+    showItem(id){
       const index = this.items.findIndex(el => el.id === id)
-      this.items[index].develop = true
+      this.items[index].show = true
     },
     hideItem(id){
       const index = this.items.findIndex(el => el.id === id)
-      this.items[index].develop = false
+      this.items[index].show = false
     },
     editItem(id){
       this.editing=true
