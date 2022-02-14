@@ -25,7 +25,7 @@ class AuthService:
         self.__code_dao = code_dao
         self.__token_dao = token_dao
 
-    def authorize(self, session_id: str, auth_request: AuthCodeRequest) -> AuthCodeInfo:
+    async def authorize(self, session_id: str, auth_request: AuthCodeRequest) -> AuthCodeInfo:
         user = self.__session_service.get_user(session_id)
         if user is None:
             raise UserNotAuthenticatedException()
@@ -39,7 +39,7 @@ class AuthService:
         auth_code_info = AuthCodeInfo(code, client, auth_request.scope, user)
         self.__code_dao.store(auth_code_info)
 
-        asyncio.get_event_loop().call_later(OAuth2Config.AUTH_CODE_LIFETIME, lambda: self.__code_dao.delete(code))
+        asyncio.get_running_loop().call_later(OAuth2Config.AUTH_CODE_LIFETIME, lambda: self.__code_dao.delete(code))
 
         return auth_code_info
 

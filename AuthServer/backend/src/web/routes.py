@@ -83,9 +83,9 @@ def create_client(clientRequest: ClientCreateRequest, SID: Optional[str] = Cooki
 
 
 @app.post(f"{WebConfig.ROUTE_PREFIX}/authorization")
-def authorize(auth_request: AuthCodeRequest, SID: Optional[str] = Cookie(None), service: AuthService = Depends()):
+async def authorize(auth_request: AuthCodeRequest, SID: Optional[str] = Cookie(None), service: AuthService = Depends()):
     try:
-        auth_code_info = service.authorize(SID, auth_request)
+        auth_code_info = await service.authorize(SID, auth_request)
         return AuthCodeResponse(code=auth_code_info.code, redirectUrl=auth_code_info.client.redirect_url)
     except UserNotAuthenticatedException as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)
