@@ -55,7 +55,7 @@ async def get_one_task(request: Request, task_id: int, introspection_facade: Int
                        service: TaskService = Depends()):
     try:
         await introspection_facade.check_auth(request, [OAuth2Config.SCOPE_READ_TASKS])
-        res = service.get(task_id)
+        res = service.get_one(task_id)
 
         return TaskResponse(id=res.id, text=res.text, day=res.day, status=res.status)
     except ClientNotAuthenticatedException as e:

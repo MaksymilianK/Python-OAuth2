@@ -25,8 +25,8 @@ class TaskService:
     def get_all(self, owner: str) -> list[Task]:
         return self.__dao.get_all(owner)
 
-    def get(self, task_id: int) -> Task:
-        return self.__dao.get(task_id)
+    def get_one(self, task_id: int) -> Task:
+        return self.__dao.get_one(task_id)
 
     def delete(self, task_id: int):
         self.__dao.delete(task_id)
