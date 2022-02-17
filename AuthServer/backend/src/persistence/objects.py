@@ -20,9 +20,10 @@ class Client:
 
 
 class Session:
-    def __init__(self, id: Optional[str] = None, owner: Optional[User] = None):
+    def __init__(self, id: Optional[str] = None, owner: Optional[User] = None, date: Optional[datetime] = None):
         self.id = id
         self.owner = owner
+        self.date = date
 
 
 class AuthToken:

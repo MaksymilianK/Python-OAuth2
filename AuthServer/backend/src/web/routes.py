@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 from fastapi import Depends, FastAPI, HTTPException, Cookie
@@ -24,7 +25,7 @@ def sign_up(response: Response, form: UserCreateRequest, service: UserService = 
 
     try:
         user, session_id = service.create(form)
-        response.set_cookie(key="SID", value=session_id, expires=2147483647)
+        response.set_cookie(key="SID", value=session_id, max_age=86400)
         return user
     except NickExistsException as e:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=e.detail)
@@ -36,7 +37,7 @@ def sign_up(response: Response, form: UserCreateRequest, service: UserService = 
 def sign_in(response: Response, form: UserSignInRequest, service: UserService = Depends()):
     try:
         user, session_id = service.sign_in(form)
-        response.set_cookie(key="SID", value=session_id, expires=2147483647)
+        response.set_cookie(key="SID", value=session_id, max_age=86400)
         return user
     except EmailNotExistException as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)
@@ -47,7 +48,7 @@ def sign_in(response: Response, form: UserSignInRequest, service: UserService = 
 @app.delete(f"{WebConfig.ROUTE_PREFIX}/current-user", status_code=status.HTTP_204_NO_CONTENT)
 def sign_out(response: Response, sid: Optional[str] = Cookie(None), service: UserService = Depends()):
     service.sign_out(sid)
-    response.set_cookie(key="SID", expires=0)
+    response.set_cookie(key="SID", max_age=0)
 
 
 @app.get(f"{WebConfig.ROUTE_PREFIX}/current-user", response_model=UserResponse)
@@ -111,6 +112,9 @@ def revoke_token(token_request: TokenRevocationRequest, service: AuthService = D
 def introspect_token(token_request: TokenIntrospectionRequest, service: AuthService = Depends()):
     try:
         token, active = service.introspect_token(token_request.token)
+
+        logging.info(f'Introspection request for token {token.token_id}')
+
         return TokenInfoResponse(token_id=token.token_id, owner=token.owner_nick,
                                  clientId=token.client_id, scopes=token.scopes, active=active)
     except UserNotAuthenticatedException as e:

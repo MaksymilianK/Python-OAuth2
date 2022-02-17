@@ -20,5 +20,9 @@ class AuthCodeDAO:
     def get(self, code: str) -> Optional[AuthCodeInfo]:
         return self.__auth_codes_info.get(code)
 
-    def delete(self, code: str):
-        self.__auth_codes_info.pop(code)
+    def delete(self, code: str) -> bool:
+        try:
+            self.__auth_codes_info.pop(code)
+            return True
+        except KeyError:
+            return False

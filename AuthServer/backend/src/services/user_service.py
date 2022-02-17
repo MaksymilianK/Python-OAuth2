@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import Depends
 from typing import Tuple
 
@@ -30,6 +32,9 @@ class UserService:
         )
 
         self.__dao.create(user)
+
+        logging.info(f'User {user.nick} signed up')
+
         return user, self.__session_service.create(user)
 
     def sign_in(self, form: UserSignInRequest) -> Tuple[User, str]:
@@ -39,10 +44,15 @@ class UserService:
 
         if not self.__password_service.verify(user.password, form.password):
             raise WrongPasswordException()
+
+        logging.info(f'User {user.nick} signed in')
+
         return user, self.__session_service.create(user)
 
     def sign_out(self, session_id: str):
         self.__session_service.delete(session_id)
+
+        logging.info(f'User with session id {session_id} signed out')
 
     def get_user(self, session_id: str) -> User:
         user = self.__session_service.get_user(session_id)

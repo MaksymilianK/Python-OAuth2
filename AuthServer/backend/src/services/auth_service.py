@@ -15,6 +15,8 @@ from config import OAuth2Config
 
 from datetime import datetime, timedelta
 
+import logging
+
 
 class AuthService:
     AUTH_CODE_LEN = 16
@@ -41,7 +43,9 @@ class AuthService:
         auth_code_info = AuthCodeInfo(code, client, auth_request.scope, user)
         self.__code_dao.store(auth_code_info)
 
-        asyncio.get_running_loop().call_later(OAuth2Config.AUTH_CODE_LIFETIME, lambda: self.__code_dao.delete(code))
+        logging.info(f'Store authorization code {code}')
+
+        asyncio.get_running_loop().call_later(OAuth2Config.AUTH_CODE_LIFETIME, lambda: self._remove_code(code))
 
         return auth_code_info
 
@@ -55,10 +59,16 @@ class AuthService:
         token = AuthToken(token_id, auth_code_info.owner, auth_code_info.client, auth_code_info.scope, datetime.now() +
                           timedelta(days=7))
         self.__token_dao.create(token)
+        self.__code_dao.delete(code)
+
+        logging.info(f'Store authorization token {token_id} for client {auth_code_info.client} & owner {auth_code_info.owner}')
+
         return token
 
     def revoke_token(self, token: str):
         self.__token_dao.update_date(token, datetime.now())
+
+        logging.info(f'Revoke token {token}')
 
     def introspect_token(self, token: str):
         token = self.__token_dao.get(token)
@@ -68,3 +78,7 @@ class AuthService:
         active = token.date > datetime.now()
 
         return token, active
+
+    def _remove_code(self, code: str):
+        if self.__code_dao.delete(code):
+            logging.info(f'Code {code} expired')

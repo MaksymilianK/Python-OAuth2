@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import Depends
 from starlette.requests import Request
 from typing import List
@@ -26,4 +28,7 @@ class IntrospectionFacade:
 
         if not self.__scope_checker.has_scopes(token_info, required_scopes):
             raise ClientNotAuthorizedException()
+
+        logging.info('Checking authorization ...')
+
         return token_info.owner

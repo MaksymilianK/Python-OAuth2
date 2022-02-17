@@ -1,3 +1,5 @@
+import logging
+
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 
 from . import Base, engine
@@ -14,3 +16,5 @@ class NoteModel(Base):
 
 
 Base.metadata.create_all(engine)
+
+logging.info('Database initialized')

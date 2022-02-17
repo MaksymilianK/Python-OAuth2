@@ -2,6 +2,8 @@ from sqlalchemy import Column, ForeignKey, Integer, String, ARRAY, DateTime
 
 from . import Base, engine
 
+import logging
+
 
 class UserModel(Base):
     __tablename__ = "users"
@@ -26,6 +28,7 @@ class SessionModel(Base):
 
     id = Column(String, primary_key=True, nullable=False)
     owner_nick = Column(String, ForeignKey("users.nick"), index=True)
+    date = Column(DateTime, index=True, nullable=False)
 
 
 class TokenModel(Base):
@@ -39,3 +42,5 @@ class TokenModel(Base):
 
 
 Base.metadata.create_all(engine)
+
+logging.info('Database initialized')

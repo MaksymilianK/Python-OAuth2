@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from typing import List
 
@@ -22,13 +23,22 @@ class PublicationService:
             last_edition=str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         )
         publication.id = self.__dao.create(publication)
+
+        logging.info(f'Create publication with id {publication.id}')
+
         return publication
 
     def delete(self, publication_id: int):
         self.__dao.delete(publication_id)
 
+        logging.info(f'Delete publication with id {publication_id}')
+
     def get_publications(self) -> List[Publication]:
         return self.__dao.get_all()
 
     def edit(self, publication_request: PublicationEditRequest, owner: str) -> Publication:
-        return self.__dao.edit(publication_request.id, publication_request.content, owner)
+        publication = self.__dao.edit(publication_request.id, publication_request.content, owner)
+
+        logging.info(f'Edit publication with id {publication_request.id}')
+
+        return publication

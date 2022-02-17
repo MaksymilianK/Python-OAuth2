@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 from fastapi import Depends
@@ -32,6 +33,9 @@ class ClientService:
         )
 
         client.id = self.__dao.create(client)
+
+        logging.info(f'Create client {client.name} with id {client.id}')
+
         return client
 
     def exists(self, client_id: int) -> bool:
