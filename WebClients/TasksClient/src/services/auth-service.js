@@ -45,7 +45,7 @@ export const authService = {
     },
 
     check_auth() {
-        if (!this.token) return;
+        if (!this.token) return Promise.resolve();
 
         return httpService.post(`${authServerUrlBackend}/token-info`, {token: this.token}, true)
             .then(res => {
