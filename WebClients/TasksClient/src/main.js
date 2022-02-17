@@ -1,5 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from "./router";
+import { authService } from "../../NotesClient/src/services/auth-service";
 
-createApp(App).use(router).mount('#app')
+authService.check_auth()
+    .then(() => createApp(App).use(router).mount('#app'))
+    .catch((e) => console.error(e));

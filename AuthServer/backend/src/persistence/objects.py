@@ -34,6 +34,22 @@ class AuthToken:
         self.scope = scope
         self.date = date
 
+    def __repr__(self):
+        text = ''
+
+        if self.token is not None:
+            text += f'token: {self.token}, '
+        if self.owner is not None:
+            text += f'owner: {self.owner}, '
+        if self.client is not None:
+            text += f'client: {self.client}, '
+        if self.scope is not None:
+            text += f'scope: {self.scope}, '
+        if self.date is not None:
+            text += f'date: {self.date.strftime("%Y-%m-%d %H:%M:%S")}'
+
+        return text
+
 
 class AuthCodeInfo:
     def __init__(self, code: Optional[str] = None, client: Optional[Client] = None, scope: Optional[List[str]] = None,

@@ -20,7 +20,7 @@ class IntrospectionFacade:
             raise ClientNotAuthenticatedException()
 
         token_info = await self.__service.get_token_info(token)
-        if token_info is None:
+        if token_info is None or not token_info.active:
             raise ClientNotAuthenticatedException()
 
         if not self.__scope_checker.has_scopes(token_info, required_scopes):

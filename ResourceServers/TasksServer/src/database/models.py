@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean
 
-from . import Base
+from . import Base, engine
 
 
 class TaskModel(Base):
@@ -11,3 +11,6 @@ class TaskModel(Base):
     day = Column(String, nullable=False)
     status = Column(Boolean, nullable=False)
     owner = Column(String, index=True, nullable=False)
+
+
+Base.metadata.create_all(engine)

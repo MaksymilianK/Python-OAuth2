@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime
 
-from . import Base
+from . import Base, engine
 
 
 class PublicationModel(Base):
@@ -11,3 +11,6 @@ class PublicationModel(Base):
     owner = Column(String, index=True, nullable=False)
     last_edition = Column(String, index=True, nullable=False)
     create_time = Column(DateTime, index=True, nullable=False)
+
+
+Base.metadata.create_all(engine)

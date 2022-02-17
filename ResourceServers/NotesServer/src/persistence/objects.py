@@ -12,7 +12,8 @@ class Note:
 
 
 class AuthTokenInfo:
-    def __init__(self, owner: str, client_id: int, scopes: List[str]):
+    def __init__(self, owner: str, client_id: int, scopes: List[str], active: bool):
         self.owner = owner
         self.client_id = client_id
         self.scopes = scopes
+        self.active = active

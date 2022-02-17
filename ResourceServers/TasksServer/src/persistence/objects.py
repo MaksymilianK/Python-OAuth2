@@ -12,7 +12,8 @@ class Task:
 
 
 class AuthTokenInfo:
-    def __init__(self, owner: str, client_id: int, scopes: list[str]):
+    def __init__(self, owner: str, client_id: int, scopes: list[str], active: bool):
         self.owner = owner
         self.client_id = client_id
         self.scopes = scopes
+        self.active = active

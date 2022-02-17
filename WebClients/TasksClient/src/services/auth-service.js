@@ -4,6 +4,7 @@ import { authServerUrlBackend } from "../config";
 import { TokenRevocationRequest } from "../requests/token-revocation-request";
 import { HTTP_NO_CONTENT, HTTP_OK } from "../utils/http-status";
 import { TokenRequest } from "../requests/token-request";
+import {HTTP_UNAUTHORIZED} from "../../../NotesClient/src/utils/http-status";
 
 const CURRENT_KEY = "TASKS_AUTH_USER";
 const TOKEN_KEY = "TASKS_AUTH_TOKEN";
@@ -44,6 +45,20 @@ export const authService = {
                     this._token = res.body.token;
                 }
                 return res;
+            });
+    },
+
+    check_auth() {
+        if (!this.token) return;
+
+        return httpService.post(`${authServerUrlBackend}/token-info`, {token: this.token}, true)
+            .then(res => {
+                if (res.status === HTTP_UNAUTHORIZED) {
+                    localStorage.removeItem(CURRENT_KEY);
+                    localStorage.removeItem(TOKEN_KEY);
+                    this._current.value = null;
+                    this._token = null;
+                }
             });
     }
 }

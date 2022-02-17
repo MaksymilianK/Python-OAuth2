@@ -1,6 +1,6 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 
-from . import Base
+from . import Base, engine
 
 
 class NoteModel(Base):
@@ -11,3 +11,6 @@ class NoteModel(Base):
     content = Column(String, nullable=False)
     owner = Column(String, index=True, nullable=False)
     last_edition = Column(DateTime, index=True, nullable=False)
+
+
+Base.metadata.create_all(engine)

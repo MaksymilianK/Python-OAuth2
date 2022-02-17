@@ -14,4 +14,5 @@ class IntrospectionService:
             response = await client.post(OAuth2Config.INTROSPECTION_ENDPOINT, json=request_body)
             response_body = response.json()
 
-            return AuthTokenInfo(response_body["owner"], response_body["clientId"], response_body["scopes"])
+            return AuthTokenInfo(response_body["owner"], response_body["clientId"], response_body["scopes"],
+                                 response_body["active"])
