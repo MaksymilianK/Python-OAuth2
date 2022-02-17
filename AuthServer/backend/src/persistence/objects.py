@@ -26,7 +26,8 @@ class Session:
 
 
 class AuthToken:
-    def __init__(self, token: str, owner: User, client: Client, scope: List[str], date: datetime):
+    def __init__(self, token: Optional[str], owner: Optional[User], client: Optional[Client],
+                 scope: Optional[List[str]], date: Optional[datetime]):
         self.token = token
         self.owner = owner
         self.client = client
@@ -35,7 +36,8 @@ class AuthToken:
 
 
 class AuthCodeInfo:
-    def __init__(self, code: str, client: Client, scope: List[str], owner: User):
+    def __init__(self, code: Optional[str], client: Optional[Client], scope: Optional[List[str]],
+                 owner: Optional[User]):
         self.code = code
         self.client = client
         self.scope = scope
