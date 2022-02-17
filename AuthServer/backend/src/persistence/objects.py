@@ -1,4 +1,5 @@
 from typing import Optional, List
+from datetime import datetime
 
 
 class User:
@@ -25,11 +26,12 @@ class Session:
 
 
 class AuthToken:
-    def __init__(self, token: str, owner: User, client: Client, scope: List[str]):
+    def __init__(self, token: str, owner: User, client: Client, scope: List[str], date: datetime):
         self.token = token
         self.owner = owner
         self.client = client
         self.scope = scope
+        self.date = date
 
 
 class AuthCodeInfo:

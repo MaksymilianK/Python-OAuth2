@@ -41,3 +41,8 @@ class ClientNotFoundException(Exception):
 class AuthCodeNotFoundException(Exception):
     detail = 9
     pass
+
+
+class TokenNotFoundException(Exception):
+    detail = 10
+    pass

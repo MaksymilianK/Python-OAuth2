@@ -92,6 +92,7 @@ class TokenInfoResponse(TokenBase):
     owner: str
     client_id: int = Field(alias="clientId")
     scopes: List[str]
+    active: bool
 
 
 class AuthCodeRequest(BaseModel):

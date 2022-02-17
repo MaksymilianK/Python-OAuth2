@@ -110,8 +110,8 @@ def revoke_token(token_request: TokenRevocationRequest, service: AuthService = D
 @app.post(f"{WebConfig.ROUTE_PREFIX}/token-info", response_model=TokenInfoResponse)
 def introspect_token(token_request: TokenIntrospectionRequest, service: AuthService = Depends()):
     try:
-        token = service.introspect_token(token_request.token)
+        token, active = service.introspect_token(token_request.token)
         return TokenInfoResponse(token_id=token.token_id, owner=token.owner_nick,
-                                 clientId=token.client_id, scopes=token.scopes)
+                                 clientId=token.client_id, scopes=token.scopes, active=active)
     except UserNotAuthenticatedException as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)

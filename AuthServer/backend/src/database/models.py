@@ -1,6 +1,6 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, ARRAY
+from sqlalchemy import Column, ForeignKey, Integer, String, ARRAY, DateTime
 
-from . import Base
+from . import Base, engine
 
 
 class UserModel(Base):
@@ -35,3 +35,7 @@ class TokenModel(Base):
     owner_nick = Column(String, ForeignKey("users.nick"), index=True)
     client_id = Column(Integer, ForeignKey("clients.id"), index=True)
     scopes = Column(ARRAY(String))
+    date = Column(DateTime, index=True, nullable=False)
+
+
+Base.metadata.create_all(engine)

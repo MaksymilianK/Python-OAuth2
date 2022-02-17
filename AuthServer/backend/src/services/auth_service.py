@@ -13,6 +13,8 @@ from services.session_service import SessionService
 
 from config import OAuth2Config
 
+from datetime import datetime, timedelta
+
 
 class AuthService:
     AUTH_CODE_LEN = 16
@@ -50,15 +52,19 @@ class AuthService:
 
         token_id = secrets.token_urlsafe(self.TOKEN_LEN)
 
-        token = AuthToken(token_id, auth_code_info.owner, auth_code_info.client, auth_code_info.scope)
+        token = AuthToken(token_id, auth_code_info.owner, auth_code_info.client, auth_code_info.scope, datetime.now() +
+                          timedelta(days=7))
         self.__token_dao.create(token)
         return token
 
     def revoke_token(self, token: str):
-        self.__token_dao.delete(token)
+        self.__token_dao.update_date(token, datetime.now())
 
     def introspect_token(self, token: str):
         token = self.__token_dao.get(token)
         if token is None:
             raise UserNotAuthenticatedException
-        return token
+
+        active = token.date > datetime.now()
+
+        return token, active
