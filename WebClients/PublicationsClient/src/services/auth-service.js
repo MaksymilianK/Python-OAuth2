@@ -5,6 +5,8 @@ import {TokenRevocationRequest} from "@/requests/token-revocation-request";
 import {HTTP_NO_CONTENT, HTTP_OK} from "@/utils/http-status";
 import {TokenRequest} from "@/requests/token-request";
 import {HTTP_UNAUTHORIZED} from "../../../NotesClient/src/utils/http-status";
+import {Oauth2UrlBuilder} from "../../../NotesClient/src/utils/oauth2-url-builder";
+import {authServerUrl, CLIENT_ID, REQUIRED_SCOPES} from "../../../NotesClient/src/config";
 
 const CURRENT_KEY = "PUBLICATIONS_AUTH_USER";
 const TOKEN_KEY = "PUBLICATIONS_AUTH_TOKEN";
@@ -55,6 +57,15 @@ export const authService = {
 
                 return res;
             });
+    },
+
+    getAuthUrl() {
+        return (new Oauth2UrlBuilder())
+            .addPathSegment(authServerUrl)
+            .addPathSegment("authorization")
+            .addClientIdParam(CLIENT_ID)
+            .addScopeParam(REQUIRED_SCOPES)
+            .build();
     },
 
     _removeToken() {

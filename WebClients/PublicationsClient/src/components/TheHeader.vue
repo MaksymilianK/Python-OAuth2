@@ -13,8 +13,6 @@
 import {authService} from "@/services/auth-service";
 import {HTTP_NO_CONTENT} from "@/utils/http-status";
 import {useRouter} from "vue-router";
-import {authServerUrl, CLIENT_ID, REQUIRED_SCOPES} from "@/config";
-import {Oauth2UrlBuilder} from "@/utils/oauth2-url-builder";
 import BaseButton from "@/components/BaseButton";
 
 export default {
@@ -23,12 +21,7 @@ export default {
   setup() {
     const router = useRouter();
 
-    const authorizationUrl = (new Oauth2UrlBuilder())
-        .addPathSegment(authServerUrl)
-        .addPathSegment("authorization")
-        .addClientIdParam(CLIENT_ID)
-        .addScopeParam(REQUIRED_SCOPES)
-        .build();
+    const authorizationUrl = authService.getAuthUrl();
 
     function signOut() {
       authService.revokeToken()

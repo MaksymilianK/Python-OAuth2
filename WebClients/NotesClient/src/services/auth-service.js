@@ -5,6 +5,8 @@ import {TokenRevocationRequest} from "@/requests/token-revocation-request";
 import {HTTP_NO_CONTENT, HTTP_OK} from "@/utils/http-status";
 import {TokenRequest} from "@/requests/token-request";
 import {HTTP_UNAUTHORIZED} from "../utils/http-status";
+import {Oauth2UrlBuilder} from "../utils/oauth2-url-builder";
+import {authServerUrl, CLIENT_ID, REQUIRED_SCOPES} from "../config";
 
 const CURRENT_KEY = "NOTES_AUTH_USER";
 const TOKEN_KEY = "NOTES_AUTH_TOKEN";
@@ -55,6 +57,15 @@ export const authService = {
 
                 return res;
             });
+    },
+
+    getAuthUrl() {
+        return (new Oauth2UrlBuilder())
+            .addPathSegment(authServerUrl)
+            .addPathSegment("authorization")
+            .addClientIdParam(CLIENT_ID)
+            .addScopeParam(REQUIRED_SCOPES)
+            .build();
     },
 
     _removeToken() {

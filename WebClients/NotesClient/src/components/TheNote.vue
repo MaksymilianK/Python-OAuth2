@@ -45,9 +45,7 @@ import {
   HTTP_OK,
   HTTP_UNAUTHORIZED
 } from "@/utils/http-status";
-import {
-  ERROR_USER_NOT_AUTHENTICATED, ERROR_USER_NOT_AUTHORIZED
-} from "@/utils/error-codes";
+import {authService} from "../services/auth-service";
 
 export default {
   name: 'TheNote',
@@ -71,19 +69,8 @@ export default {
                 }
                 break;
               case HTTP_UNAUTHORIZED:
-                if (res.body.detail === ERROR_USER_NOT_AUTHENTICATED) {
-                  error.value = "User is not authenticated!";
-                }  else {
-                  error.value = "Unexpected error!";
-                }
-                break;
               case HTTP_FORBIDDEN:
-                if (res.body.detail === ERROR_USER_NOT_AUTHORIZED) {
-                  error.value = "Missing required scope NOTES_READ!";
-                }
-                else {
-                  error.value = "Unexpected error!";
-                }
+                window.location.replace(authService.getAuthUrl());
                 break;
               default:
                 error.value = "Unexpected error!";
@@ -130,13 +117,8 @@ export default {
                 this._addItem(noteTitle, noteContent, res, noteType)
                 break;
               case HTTP_UNAUTHORIZED:
-                if (res.body.detail === ERROR_USER_NOT_AUTHENTICATED) {
-                  error.value = "User is not authenticated!";
-                } else if (res.body.detail === ERROR_USER_NOT_AUTHORIZED) {
-                  error.value = "Missing required scope NOTES_CREATE!";
-                } else {
-                  error.value = "Unexpected error!";
-                }
+              case HTTP_FORBIDDEN:
+                window.location.replace(authService.getAuthUrl());
                 break;
               default:
                 error.value = "Unexpected error!";
@@ -177,13 +159,8 @@ export default {
                 this._removeItem(id)
                 break;
               case HTTP_UNAUTHORIZED:
-                if (res.body.detail === ERROR_USER_NOT_AUTHENTICATED) {
-                  error.value = "User is not authenticated!";
-                } else if (res.body.detail === ERROR_USER_NOT_AUTHORIZED) {
-                  error.value = "Missing required scope NOTES_EDIT!";
-                } else {
-                  error.value = "Unexpected error!";
-                }
+              case HTTP_FORBIDDEN:
+                window.location.replace(authService.getAuthUrl());
                 break;
               default:
                 error.value = "Unexpected error!";

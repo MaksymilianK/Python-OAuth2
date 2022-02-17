@@ -14,7 +14,6 @@ import { ref } from "vue";
 import { authService } from "@/services/auth-service";
 import { taskService } from "@/services/task-service";
 import { HTTP_201_CREATED, HTTP_OK, HTTP_NO_CONTENT, HTTP_UNAUTHORIZED, HTTP_FORBIDDEN } from "@/utils/http-status";
-import { ERROR_USER_NOT_AUTHENTICATED, ERROR_USER_NOT_AUTHORIZED } from "@/utils/error-codes";
 
 export default {
   name: "Home",
@@ -52,13 +51,8 @@ export default {
                 this._addTask(res);
                 break;
               case HTTP_UNAUTHORIZED:
-                if (res.body.detail === ERROR_USER_NOT_AUTHENTICATED) {
-                  this.error.value = "User is not authenticated!";
-                } else if (res.body.detail === ERROR_USER_NOT_AUTHORIZED) {
-                  this.error.value = "Missing required scope TASKS_CREATE!";
-                } else {
-                  this.error.value = "Unexpected error!";
-                }
+              case HTTP_FORBIDDEN:
+                window.location.replace(authService.getAuthUrl());
                 break;
               default:
                 console.log(res.status);
@@ -80,13 +74,8 @@ export default {
                   this._deleteTask(id);
                   break;
                 case HTTP_UNAUTHORIZED:
-                  if (res.body.detail === ERROR_USER_NOT_AUTHENTICATED) {
-                    this.error.value = "User is not authenticated!";
-                  } else if (res.body.detail === ERROR_USER_NOT_AUTHORIZED) {
-                    this.error.value = "Missing required scope TASKS_EDIT!";
-                  } else {
-                    this.error.value = "Unexpected error!";
-                  }
+                case HTTP_FORBIDDEN:
+                  window.location.replace(authService.getAuthUrl());
                   break;
                 default:
                   console.log(res.status);
@@ -111,13 +100,8 @@ export default {
                 this._toggleStatus(res, id);
                 break;
               case HTTP_UNAUTHORIZED:
-                if (res.body.detail === ERROR_USER_NOT_AUTHENTICATED) {
-                  this.error.value = "User is not authenticated!";
-                } else if (res.body.detail === ERROR_USER_NOT_AUTHORIZED) {
-                  this.error.value = "Missing required scope TASKS_EDIT!";
-                } else {
-                  this.error.value = "Unexpected error!";
-                }
+              case HTTP_FORBIDDEN:
+                window.location.replace(authService.getAuthUrl());
                 break;
               default:
                 console.log(res.status);
@@ -138,19 +122,8 @@ export default {
                 this.tasks = this._fetchTasks(res);
                 break;
               case HTTP_UNAUTHORIZED:
-                if (res.body.detail === ERROR_USER_NOT_AUTHENTICATED) {
-                  this.error.value = "User is not authenticated!";
-                }  else {
-                  this.error.value = "Unexpected error!";
-                }
-                break;
               case HTTP_FORBIDDEN:
-                if (res.body.detail === ERROR_USER_NOT_AUTHORIZED) {
-                  this.error.value = "Missing required scope NOTES_READ!";
-                }
-                else {
-                  this.error.value = "Unexpected error!";
-                }
+                window.location.replace(authService.getAuthUrl());
                 break;
               default:
                 console.log(res.status);
@@ -173,19 +146,8 @@ export default {
                 data = this._fetchTask(res);
                 break;
               case HTTP_UNAUTHORIZED:
-                if (res.body.detail === ERROR_USER_NOT_AUTHENTICATED) {
-                  this.error.value = "User is not authenticated!";
-                }  else {
-                  this.error.value = "Unexpected error!";
-                }
-                break;
               case HTTP_FORBIDDEN:
-                if (res.body.detail === ERROR_USER_NOT_AUTHORIZED) {
-                  this.error.value = "Missing required scope NOTES_READ!";
-                }
-                else {
-                  this.error.value = "Unexpected error!";
-                }
+                window.location.replace(authService.getAuthUrl());
                 break;
               default:
                 console.log(res.status);

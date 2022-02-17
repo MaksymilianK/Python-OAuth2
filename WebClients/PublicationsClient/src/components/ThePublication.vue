@@ -35,8 +35,8 @@
 import {ref} from "vue";
 import {publicationService} from "@/services/publication-service";
 import {HTTP_201_CREATED, HTTP_FORBIDDEN, HTTP_NO_CONTENT, HTTP_OK, HTTP_UNAUTHORIZED} from "@/utils/http-status";
-import {ERROR_USER_NOT_AUTHENTICATED, ERROR_USER_NOT_AUTHORIZED} from "@/utils/error-codes";
 import {publicationValidators} from "@/utils/publication-validators";
+import {authService} from "../services/auth-service";
 
 export default {
   name: 'ThePublication',
@@ -60,19 +60,8 @@ export default {
                 }
                 break;
               case HTTP_UNAUTHORIZED:
-                if (res.body.detail === ERROR_USER_NOT_AUTHENTICATED) {
-                  error.value = "User is not authenticated!";
-                }  else {
-                  error.value = "Unexpected error!";
-                }
-                break;
               case HTTP_FORBIDDEN:
-                if (res.body.detail === ERROR_USER_NOT_AUTHORIZED) {
-                  error.value = "Missing required scope PUBLICATIONS_READ!";
-                }
-                else {
-                  error.value = "Unexpected error!";
-                }
+                window.location.replace(authService.getAuthUrl());
                 break;
               default:
                 error.value = "Unexpected error!";
@@ -112,13 +101,8 @@ export default {
                 this._addItem(res)
                 break;
               case HTTP_UNAUTHORIZED:
-                if (res.body.detail === ERROR_USER_NOT_AUTHENTICATED) {
-                  error.value = "User is not authenticated!";
-                } else if (res.body.detail === ERROR_USER_NOT_AUTHORIZED) {
-                  error.value = "Missing required scope PUBLICATIONS_CREATE!";
-                } else {
-                  error.value = "Unexpected error!";
-                }
+              case HTTP_FORBIDDEN:
+                window.location.replace(authService.getAuthUrl());
                 break;
               default:
                 error.value = "Unexpected error!";
@@ -151,13 +135,8 @@ export default {
                 this._removeItem(id)
                 break;
               case HTTP_UNAUTHORIZED:
-                if (res.body.detail === ERROR_USER_NOT_AUTHENTICATED) {
-                  error.value = "User is not authenticated!";
-                } else if (res.body.detail === ERROR_USER_NOT_AUTHORIZED) {
-                  error.value = "Missing required scope PUBLICATIONS_EDIT!";
-                } else {
-                  error.value = "Unexpected error!";
-                }
+              case HTTP_FORBIDDEN:
+                window.location.replace(authService.getAuthUrl());
                 break;
               default:
                 error.value = "Unexpected error!";
@@ -200,13 +179,8 @@ export default {
                 this._editItem(id, index, res)
                 break;
               case HTTP_UNAUTHORIZED:
-                if (res.body.detail === ERROR_USER_NOT_AUTHENTICATED) {
-                  error.value = "User is not authenticated!";
-                } else if (res.body.detail === ERROR_USER_NOT_AUTHORIZED) {
-                  error.value = "Missing required scope PUBLICATIONS_EDIT!";
-                } else {
-                  error.value = "Unexpected error!";
-                }
+              case HTTP_FORBIDDEN:
+                window.location.replace(authService.getAuthUrl());
                 break;
               default:
                 error.value = "Unexpected error!";
