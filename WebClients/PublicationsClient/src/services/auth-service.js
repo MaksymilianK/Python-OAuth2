@@ -1,12 +1,11 @@
 import {ref} from "vue";
 import {httpService} from "@/services/http-service";
-import {authServerUrlBackend} from "@/config";
+import {authServerUrlBackend, authServerUrl, CLIENT_ID, REQUIRED_SCOPES} from "@/config";
 import {TokenRevocationRequest} from "@/requests/token-revocation-request";
 import {HTTP_NO_CONTENT, HTTP_OK} from "@/utils/http-status";
 import {TokenRequest} from "@/requests/token-request";
-import {HTTP_UNAUTHORIZED} from "../../../NotesClient/src/utils/http-status";
-import {Oauth2UrlBuilder} from "../../../NotesClient/src/utils/oauth2-url-builder";
-import {authServerUrl, CLIENT_ID, REQUIRED_SCOPES} from "../../../NotesClient/src/config";
+import {HTTP_UNAUTHORIZED} from "../utils/http-status";
+import {Oauth2UrlBuilder} from "../utils/oauth2-url-builder";
 
 const CURRENT_KEY = "PUBLICATIONS_AUTH_USER";
 const TOKEN_KEY = "PUBLICATIONS_AUTH_TOKEN";
