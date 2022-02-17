@@ -35,7 +35,7 @@ def wait_for_input(name):
         if not args:
             continue
         if len(args) != 2:
-            print('Invalid number of arguments!')
+            print('Invalid number of arguments!\n')
             continue
 
         if args[0] == 'show':
@@ -44,17 +44,18 @@ def wait_for_input(name):
 
             for active_token in active_tokens:
                 print(active_token)
+            print()
 
         elif args[0] == 'revoke':
             try:
                 token = args[1]
                 admin_service.revoke(token)
 
-                print(f'Token {token} is revoked!')
+                print(f'Token {token} is revoked!\n')
             except TokenNotFoundException:
-                print('Token not found!')
+                print('Token not found!\n')
         else:
-            print('Unknown command')
+            print(f'Unknown command {command}\n')
 
 
 thread = threading.Thread(target=wait_for_input, args=(1,), daemon=True)

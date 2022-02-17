@@ -26,10 +26,7 @@ export const authService = {
         return httpService.post(`${authServerUrlBackend}/token-revocation`, new TokenRevocationRequest(this._token), true)
             .then(res => {
                 if (res.status === HTTP_NO_CONTENT) {
-                    localStorage.removeItem(CURRENT_KEY);
-                    localStorage.removeItem(TOKEN_KEY);
-                    this._current.value = null;
-                    this._token = null;
+                    this._removeToken();
                 }
                 return res;
             });
@@ -39,10 +36,7 @@ export const authService = {
         return httpService.post(`${authServerUrlBackend}/auth-token`, new TokenRequest(code), true)
             .then(res => {
                 if (res.status === HTTP_OK) {
-                    localStorage.setItem(CURRENT_KEY, res.body.owner);
-                    localStorage.setItem(TOKEN_KEY, res.body.token);
-                    this._current.value = res.body.owner;
-                    this._token = res.body.token;
+                    this._setToken(res);
                 }
                 return res;
             });
@@ -54,11 +48,26 @@ export const authService = {
         return httpService.post(`${authServerUrlBackend}/token-info`, {token: this.token}, true)
             .then(res => {
                 if (res.status === HTTP_UNAUTHORIZED) {
-                    localStorage.removeItem(CURRENT_KEY);
-                    localStorage.removeItem(TOKEN_KEY);
-                    this._current.value = null;
-                    this._token = null;
+                    this._removeToken();
+                } else if (res.status === HTTP_OK && !res.body.active) {
+                    this._removeToken();
                 }
+
+                return res;
             });
+    },
+
+    _removeToken() {
+        localStorage.removeItem(CURRENT_KEY);
+        localStorage.removeItem(TOKEN_KEY);
+        this._current.value = null;
+        this._token = null;
+    },
+
+    _setToken(res) {
+        localStorage.setItem(CURRENT_KEY, res.body.owner);
+        localStorage.setItem(TOKEN_KEY, res.body.token);
+        this._current.value = res.body.owner;
+        this._token = res.body.token;
     }
 }
