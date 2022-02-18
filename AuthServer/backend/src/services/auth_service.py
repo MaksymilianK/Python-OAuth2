@@ -61,7 +61,7 @@ class AuthService:
         self.__token_dao.create(token)
         self.__code_dao.delete(code)
 
-        logging.info(f'Store authorization token {token_id} for client {auth_code_info.client} & owner {auth_code_info.owner}')
+        logging.info(f'Store authorization token {token_id} for client {auth_code_info.client.name} & owner {auth_code_info.owner.nick}')
 
         return token
 

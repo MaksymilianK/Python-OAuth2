@@ -29,6 +29,6 @@ class IntrospectionFacade:
         if not self.__scope_checker.has_scopes(token_info, required_scopes):
             raise ClientNotAuthorizedException()
 
-        logging.info('Checking authorization ...')
+        logging.info(f'Checking authorization for owner {token_info.owner} & client id {token_info.client_id}')
 
         return token_info.owner
