@@ -46,8 +46,8 @@ def sign_in(response: Response, form: UserSignInRequest, service: UserService = 
 
 
 @app.delete(f"{WebConfig.ROUTE_PREFIX}/current-user", status_code=status.HTTP_204_NO_CONTENT)
-def sign_out(response: Response, sid: Optional[str] = Cookie(None), service: UserService = Depends()):
-    service.sign_out(sid)
+def sign_out(response: Response, SID: Optional[str] = Cookie(None), service: UserService = Depends()):
+    service.sign_out(SID)
     response.set_cookie(key="SID", max_age=0)
 
 

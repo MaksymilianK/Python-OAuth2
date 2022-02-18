@@ -12,7 +12,7 @@ class SessionDAO:
         self.__db = db
 
     def create(self, session: Session):
-        self.__db.add(SessionModel(id=session.id, owner_nick=session.owner.nick))
+        self.__db.add(SessionModel(id=session.id, owner_nick=session.owner.nick, date=session.date))
         self.__db.commit()
 
     def delete(self, session_id: str):

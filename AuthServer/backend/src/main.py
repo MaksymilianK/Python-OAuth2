@@ -1,3 +1,5 @@
+import logging
+
 from config import WebConfig
 from web.routes import app
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,6 +11,7 @@ from persistence.token_dao import TokenDAO
 from database import SessionLocal
 from exceptions import TokenNotFoundException
 
+logging.getLogger().setLevel(logging.INFO)
 
 if WebConfig.CORS_ENABLED:
     app.add_middleware(
@@ -18,10 +21,6 @@ if WebConfig.CORS_ENABLED:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-
-
-print('Hello')
-
 
 dao = TokenDAO(SessionLocal())
 admin_service = AdminService(dao)
