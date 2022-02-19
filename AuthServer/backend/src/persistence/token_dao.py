@@ -8,7 +8,7 @@ from fastapi import Depends
 from database import SessionLocal, get_db
 from database.models import TokenModel
 from exceptions import TokenNotFoundException
-from persistence.objects import AuthToken, User, Client
+from persistence.objects import AuthToken, User, Client, SavedScope
 
 
 class TokenDAO:
@@ -45,3 +45,16 @@ class TokenDAO:
         auth_tokens = self.__db.query(TokenModel).filter(and_(TokenModel.date > date, TokenModel.owner_nick == nick)).all()
 
         return [AuthToken(token=t.token_id, client_id=t.client_id, date=t.date) for t in auth_tokens]
+
+    def update_scopes(self, saved_scope: SavedScope):
+        tokens = self.__db.query(TokenModel)\
+            .filter(and_(
+                TokenModel.owner_nick == saved_scope.user_nick,
+                TokenModel.client_id == saved_scope.client_id
+            ))\
+            .all()
+
+        for token in tokens:
+            token.scope = saved_scope.scope
+
+        self.__db.commit()

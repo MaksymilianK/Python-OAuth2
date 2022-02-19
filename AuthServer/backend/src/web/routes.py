@@ -8,9 +8,11 @@ from starlette.responses import Response
 from exceptions import NickExistsException, EmailExistsException, EmailNotExistException, WrongPasswordException, \
     UserNotAuthenticatedException, ClientNameExistsException, ClientRedirectURLExistsException, ClientNotFoundException, \
     AuthCodeNotFoundException
+from services.saved_scope_service import SavedScopeService
+from services.token_service import TokenService
 from web.schemas import UserCreateRequest, UserSignInRequest, UserResponse, ClientResponse, ClientCreateRequest, \
     AuthCodeRequest, AuthCodeResponse, TokenRequest, TokenResponse, TokenRevocationRequest, TokenIntrospectionRequest, \
-    TokenInfoResponse
+    TokenInfoResponse, ClientSavedScopeResponse, SavedScopeResponse
 from services.auth_service import AuthService
 from services.client_service import ClientService
 from services.user_service import UserService
@@ -86,8 +88,8 @@ def create_client(clientRequest: ClientCreateRequest, SID: Optional[str] = Cooki
 @app.post(f"{WebConfig.ROUTE_PREFIX}/authorization")
 async def authorize(auth_request: AuthCodeRequest, SID: Optional[str] = Cookie(None), service: AuthService = Depends()):
     try:
-        auth_code_info = await service.authorize(SID, auth_request)
-        return AuthCodeResponse(code=auth_code_info.code, redirectUrl=auth_code_info.client.redirect_url)
+        auth_code_info, redirect_url = await service.authorize(SID, auth_request)
+        return AuthCodeResponse(code=auth_code_info.code, redirectUrl=redirect_url)
     except UserNotAuthenticatedException as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)
     except ClientNotFoundException as e:
@@ -95,21 +97,21 @@ async def authorize(auth_request: AuthCodeRequest, SID: Optional[str] = Cookie(N
 
 
 @app.post(f"{WebConfig.ROUTE_PREFIX}/auth-token")
-def get_auth_token(token_request: TokenRequest, service: AuthService = Depends()):
+def get_auth_token(token_request: TokenRequest, service: TokenService = Depends()):
     try:
         token = service.generate_token(token_request.code)
-        return TokenResponse(token=token.token, owner=token.owner.nick)
+        return TokenResponse(token=token.token, owner=token.owner_nick)
     except AuthCodeNotFoundException as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)
 
 
 @app.post(f"{WebConfig.ROUTE_PREFIX}/token-revocation", status_code=204)
-def revoke_token(token_request: TokenRevocationRequest, service: AuthService = Depends()):
+def revoke_token(token_request: TokenRevocationRequest, service: TokenService = Depends()):
     service.revoke_token(token_request.token)
 
 
 @app.post(f"{WebConfig.ROUTE_PREFIX}/token-info", response_model=TokenInfoResponse)
-def introspect_token(token_request: TokenIntrospectionRequest, service: AuthService = Depends()):
+def introspect_token(token_request: TokenIntrospectionRequest, service: TokenService = Depends()):
     try:
         token, active = service.introspect_token(token_request.token)
 
@@ -117,5 +119,36 @@ def introspect_token(token_request: TokenIntrospectionRequest, service: AuthServ
 
         return TokenInfoResponse(token_id=token.token_id, owner=token.owner_nick,
                                  clientId=token.client_id, scopes=token.scopes, active=active)
+    except UserNotAuthenticatedException as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)
+
+
+@app.get(WebConfig.ROUTE_PREFIX + "/scopes/{client_id}")
+def get_saved_scope_for_client(client_id: int, SID: Optional[str] = Cookie(None), service: SavedScopeService = Depends()):
+    try:
+        return ClientSavedScopeResponse(scope=service.get_for_user_and_client(client_id, SID))
+    except UserNotAuthenticatedException as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)
+
+
+@app.get(WebConfig.ROUTE_PREFIX + "/scopes")
+def get_saved_scope(SID: Optional[str] = Cookie(None), service: SavedScopeService = Depends()):
+    try:
+        scopes_and_clients = service.get_for_user(SID)
+        responses: list[tuple[ClientSavedScopeResponse, ClientResponse]] = []
+        for sc in scopes_and_clients:
+            responses.append((
+                ClientSavedScopeResponse(scope=sc[0].scope),
+                ClientResponse(id=sc[1].id, name=sc[1].name, description=sc[1].description)
+            ))
+        return SavedScopeResponse(scopes=responses)
+    except UserNotAuthenticatedException as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)
+
+
+@app.post(WebConfig.ROUTE_PREFIX + "/scopes/{client_id}")
+def revoke_scope(client_id: int, SID: Optional[str] = Cookie(None), service: SavedScopeService = Depends()):
+    try:
+        service.revoke_scope(client_id, SID)
     except UserNotAuthenticatedException as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)

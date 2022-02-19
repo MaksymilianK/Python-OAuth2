@@ -1,5 +1,3 @@
-from typing import List
-
 from pydantic import Field
 from pydantic.main import BaseModel
 
@@ -91,13 +89,13 @@ class TokenResponse(BaseModel):
 class TokenInfoResponse(TokenBase):
     owner: str
     client_id: int = Field(alias="clientId")
-    scopes: List[str]
+    scopes: list[str]
     active: bool
 
 
 class AuthCodeRequest(BaseModel):
     client_id: int = Field(alias="clientId")
-    scope: List[str]
+    scope: list[str]
 
 
 class AuthCodeResponse(BaseModel):
@@ -106,3 +104,16 @@ class AuthCodeResponse(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class SavedScopeUpdateRequest(BaseModel):
+    client_id: int = Field(alias="clientId")
+    scope: list[str]
+
+
+class ClientSavedScopeResponse(BaseModel):
+    scope: list[str]
+
+
+class SavedScopeResponse(BaseModel):
+    scopes: list[tuple[ClientSavedScopeResponse, ClientResponse]]

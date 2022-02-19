@@ -113,3 +113,11 @@ class AuthCodeInfo:
             text += f'owner: {self.owner_nick}'
 
         return text
+
+
+class SavedScope:
+    def __init__(self, user_nick: Optional[str] = None, client_id: Optional[int] = None,
+                 scope: Optional[List[str]] = None):
+        self.user_nick = user_nick
+        self.client_id = client_id
+        self.scope = scope
