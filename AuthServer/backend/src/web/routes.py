@@ -146,7 +146,7 @@ def get_saved_scope(SID: Optional[str] = Cookie(None), service: SavedScopeServic
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)
 
 
-@app.post(WebConfig.ROUTE_PREFIX + "/scopes/{client_id}")
+@app.post(WebConfig.ROUTE_PREFIX + "/scopes/{client_id}", status_code=204)
 def revoke_scope(client_id: int, SID: Optional[str] = Cookie(None), service: SavedScopeService = Depends()):
     try:
         service.revoke_scope(client_id, SID)

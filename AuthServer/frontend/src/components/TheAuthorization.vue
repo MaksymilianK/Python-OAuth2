@@ -9,10 +9,18 @@
         <h3 class="section-title">Client {{ name }}</h3>
         <p class="section-text">{{ description }}</p>
       </section>
+
+      <section class="section" v-if="grantedPermissions.length !== 0">
+        <h3 class="section-title">Already granted permissions</h3>
+        <ul class="section-text">
+          <li v-for="scope of grantedPermissions" :key="scope">{{ scopesDescriptions[scope] }}</li>
+        </ul>
+      </section>
+
       <section class="section">
         <h3 class="section-title">Requested permissions</h3>
         <ul class="section-text">
-          <li v-for="scope of requestedScopes" :key="scope">{{ scopesDescriptions[scope] }}</li>
+          <li v-for="scope of requestedPermissions" :key="scope">{{ scopesDescriptions[scope] }}</li>
         </ul>
       </section>
 
@@ -33,11 +41,12 @@ import {authService} from "@/services/auth-service";
 import {AuthorizationRequest} from "@/requests/authorization-request";
 import {userService} from "@/services/user-service";
 import BaseButton from "@/components/base/BaseButton";
+import {scopeService} from "@/services/scope-service";
 
 export default {
   name: "TheAuthorization",
   components: {BaseButton},
-  setup() {
+  async setup() {
     const router = useRouter();
     const query = router.currentRoute.value.query;
 
@@ -57,7 +66,26 @@ export default {
       return {error};
     }
 
-    const requestedScopes = query["scope"].split(",");
+    const scopes = query["scope"].split(",");
+
+    const requestedPermissions = [];
+    const grantedPermissions = [];
+
+    const scopeResponse = await scopeService.get_for_client(query["client_id"]);
+    switch (scopeResponse.status) {
+      case HTTP_OK:
+        if (scopeResponse.body.scope.every(v => scopes.includes(v))) {
+          authorize();
+          return;
+        } else if (scopeResponse.body.scope.length !== 0) {
+          grantedPermissions.push(scopeResponse.body.scope);
+          scopes.forEach(s => {
+            if (!grantedPermissions.includes(s)) {
+              requestedPermissions.push(s);
+            }
+          })
+        }
+    }
 
     clientService.get_client(query["client_id"])
         .then(res => {
@@ -80,7 +108,7 @@ export default {
         });
 
     function authorize() {
-      authService.authorize(new AuthorizationRequest(client.id.value, requestedScopes))
+      authService.authorize(new AuthorizationRequest(client.id.value, scopes))
           .then(res => {
             switch (res.status) {
               case HTTP_OK:
@@ -106,8 +134,9 @@ export default {
 
     return {
       ...client,
-      requestedScopes,
+      requestedPermissions,
       scopesDescriptions,
+      grantedPermissions,
       error,
       authorize,
       cancel
