@@ -59,4 +59,3 @@ def wait_for_input(name):
 
 thread = threading.Thread(target=wait_for_input, args=(1,), daemon=True)
 thread.start()
-#test
