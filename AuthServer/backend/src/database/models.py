@@ -45,7 +45,7 @@ class SavedScopeModel(Base):
     __tablename__ = "saved_scopes"
 
     user_nick = Column(String, ForeignKey("users.nick"), primary_key=True)
-    client_id = Column(String, ForeignKey("clients.id"), primary_key=True)
+    client_id = Column(Integer, ForeignKey("clients.id"), primary_key=True)
     scopes = Column(ARRAY(String))
 
 
