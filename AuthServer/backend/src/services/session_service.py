@@ -16,7 +16,7 @@ class SessionService:
 
     def create(self, owner: User) -> str:
         session_id = secrets.token_urlsafe(self.SESSION_ID_LEN)
-        self.__dao.create(Session(session_id, owner, datetime.now() + timedelta(days=1)))
+        self.__dao.create(Session(session_id, owner.nick, datetime.now() + timedelta(days=1)))
         return session_id
 
     def delete(self, session_id: str):

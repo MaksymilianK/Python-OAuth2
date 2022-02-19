@@ -1,4 +1,6 @@
 from datetime import datetime
+
+from pydantic.fields import Optional
 from sqlalchemy import and_
 
 from fastapi import Depends
@@ -6,7 +8,7 @@ from fastapi import Depends
 from database import SessionLocal, get_db
 from database.models import TokenModel
 from exceptions import TokenNotFoundException
-from persistence.objects import AuthToken
+from persistence.objects import AuthToken, User, Client
 
 
 class TokenDAO:
@@ -16,8 +18,8 @@ class TokenDAO:
     def create(self, token: AuthToken):
         self.__db.add(TokenModel(
             token_id=token.token,
-            owner_nick=token.owner.nick,
-            client_id=token.client.id,
+            owner_nick=token.owner_nick,
+            client_id=token.client_id,
             scopes=token.scope,
             date=token.date
         ))
@@ -32,10 +34,14 @@ class TokenDAO:
         token.date = date
         self.__db.commit()
 
-    def get(self, token: str):
-        return self.__db.query(TokenModel).filter(TokenModel.token_id == token).first()
+    def get(self, token: str) -> Optional[AuthToken]:
+        model = self.__db.query(TokenModel).filter(TokenModel.token_id == token).first()
+        if model is None:
+            return None
+
+        return AuthToken(token=token, owner_nick=model.owner_nick, client_id=model.client_id, date=model.date)
 
     def get_all_before(self, date: datetime, nick: str) -> list[AuthToken]:
         auth_tokens = self.__db.query(TokenModel).filter(and_(TokenModel.date > date, TokenModel.owner_nick == nick)).all()
 
-        return [AuthToken(token=t.token_id, client=t.client_id, date=t.date) for t in auth_tokens]
+        return [AuthToken(token=t.token_id, client_id=t.client_id, date=t.date) for t in auth_tokens]

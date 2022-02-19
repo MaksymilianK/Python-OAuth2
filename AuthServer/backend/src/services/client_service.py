@@ -29,7 +29,7 @@ class ClientService:
             name=client_request.name,
             description=client_request.description,
             redirect_url=client_request.redirect_url,
-            owner=current
+            owner_nick=current.nick
         )
 
         client.id = self.__dao.create(client)

@@ -40,7 +40,7 @@ class AuthService:
 
         code = secrets.token_urlsafe(self.AUTH_CODE_LEN)
 
-        auth_code_info = AuthCodeInfo(code, client, auth_request.scope, user)
+        auth_code_info = AuthCodeInfo(code, client.id, auth_request.scope, user.nick)
         self.__code_dao.store(auth_code_info)
 
         logging.info(f'Store authorization code {code}')
@@ -56,12 +56,12 @@ class AuthService:
 
         token_id = secrets.token_urlsafe(self.TOKEN_LEN)
 
-        token = AuthToken(token_id, auth_code_info.owner, auth_code_info.client, auth_code_info.scope, datetime.now() +
-                          timedelta(days=7))
+        token = AuthToken(token_id, auth_code_info.owner_nick, auth_code_info.client_id, auth_code_info.scope,
+                          datetime.now() + timedelta(days=7))
         self.__token_dao.create(token)
         self.__code_dao.delete(code)
 
-        logging.info(f'Store authorization token {token_id} for client {auth_code_info.client.name} & owner {auth_code_info.owner.nick}')
+        logging.info(f'Store authorization token {token_id} for client {auth_code_info.client_id} & owner {auth_code_info.owner_nick}')
 
         return token
 

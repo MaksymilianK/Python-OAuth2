@@ -32,7 +32,7 @@ class ClientDAO:
             name=client.name,
             description=client.description,
             redirect_url=client.redirect_url,
-            owner_nick=client.owner.nick
+            owner_nick=client.owner_nick
         )
         self.__db.add(client_model)
 
