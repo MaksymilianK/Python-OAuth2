@@ -46,7 +46,7 @@ import {scopeService} from "@/services/scope-service";
 export default {
   name: "TheAuthorization",
   components: {BaseButton},
-  async setup() {
+  setup() {
     const router = useRouter();
     const query = router.currentRoute.value.query;
 
@@ -66,26 +66,30 @@ export default {
       return {error};
     }
 
-    const scopes = query["scope"].split(",");
+    const requestedScopes = query["scope"].split(",");
 
     const requestedPermissions = [];
     const grantedPermissions = [];
 
-    const scopeResponse = await scopeService.get_for_client(query["client_id"]);
-    switch (scopeResponse.status) {
-      case HTTP_OK:
-        if (scopeResponse.body.scope.every(v => scopes.includes(v))) {
-          authorize();
-          return;
-        } else if (scopeResponse.body.scope.length !== 0) {
-          grantedPermissions.push(scopeResponse.body.scope);
-          scopes.forEach(s => {
-            if (!grantedPermissions.includes(s)) {
-              requestedPermissions.push(s);
+    scopeService.get_for_client(query["client_id"])
+      .then(res => {
+        switch (res.status) {
+          case HTTP_OK:
+            if (requestedScopes.every(v => res.body.scope.includes(v))) {
+              authorize();
+              return;
+            } else if (res.body.scope.length !== 0) {
+              grantedPermissions.push(res.body.scope);
+              requestedScopes.forEach(s => {
+                if (!grantedPermissions.includes(s)) {
+                  requestedPermissions.push(s);
+                }
+              })
+            } else {
+              requestedScopes.forEach(s => requestedPermissions.push(s));
             }
-          })
         }
-    }
+      });
 
     clientService.get_client(query["client_id"])
         .then(res => {
@@ -108,7 +112,7 @@ export default {
         });
 
     function authorize() {
-      authService.authorize(new AuthorizationRequest(client.id.value, scopes))
+      authService.authorize(new AuthorizationRequest(query["client_id"], requestedScopes))
           .then(res => {
             switch (res.status) {
               case HTTP_OK:

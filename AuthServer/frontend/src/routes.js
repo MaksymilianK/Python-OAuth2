@@ -3,6 +3,7 @@ import TheSignUp from "@/components/TheSignUp";
 import TheSignIn from "@/components/TheSignIn";
 import TheAddClient from "@/components/TheAddClient";
 import TheAuthorization from "@/components/TheAuthorization";
+import TheScopes from "@/components/TheScopes";
 
 export const routes = [
   {
@@ -29,5 +30,10 @@ export const routes = [
     path: '/authorization',
     name: 'auth',
     component: TheAuthorization
+  },
+  {
+    path: '/scopes',
+    name: 'scopes',
+    component: TheScopes
   }
 ]

@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 from pydantic.fields import Optional
@@ -39,7 +40,7 @@ class TokenDAO:
         if model is None:
             return None
 
-        return AuthToken(token=token, owner_nick=model.owner_nick, client_id=model.client_id, date=model.date)
+        return AuthToken(token, model.owner_nick, model.client_id, model.scopes, model.date)
 
     def get_all_before(self, date: datetime, nick: str) -> list[AuthToken]:
         auth_tokens = self.__db.query(TokenModel).filter(and_(TokenModel.date > date, TokenModel.owner_nick == nick)).all()
@@ -54,7 +55,11 @@ class TokenDAO:
             ))\
             .all()
 
+        logging.info(saved_scope.user_nick)
+        logging.info(saved_scope.client_id)
+        logging.info(saved_scope.scope)
+
         for token in tokens:
-            token.scope = saved_scope.scope
+            token.scopes = saved_scope.scope
 
         self.__db.commit()

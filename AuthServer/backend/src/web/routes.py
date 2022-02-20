@@ -115,10 +115,10 @@ def introspect_token(token_request: TokenIntrospectionRequest, service: TokenSer
     try:
         token, active = service.introspect_token(token_request.token)
 
-        logging.info(f'Introspection request for token {token.token_id}')
+        logging.info(f'Introspection request for token {token.token}')
 
-        return TokenInfoResponse(token_id=token.token_id, owner=token.owner_nick,
-                                 clientId=token.client_id, scopes=token.scopes, active=active)
+        return TokenInfoResponse(token_id=token.token, owner=token.owner_nick,
+                                 clientId=token.client_id, scopes=token.scope, active=active)
     except UserNotAuthenticatedException as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)
 
@@ -126,7 +126,11 @@ def introspect_token(token_request: TokenIntrospectionRequest, service: TokenSer
 @app.get(WebConfig.ROUTE_PREFIX + "/scopes/{client_id}")
 def get_saved_scope_for_client(client_id: int, SID: Optional[str] = Cookie(None), service: SavedScopeService = Depends()):
     try:
-        return ClientSavedScopeResponse(scope=service.get_for_user_and_client(client_id, SID))
+        saved_scope = service.get_for_user_and_client(client_id, SID)
+        if saved_scope is None:
+            return ClientSavedScopeResponse(scope=[])
+        else:
+            return ClientSavedScopeResponse(scope=saved_scope.scope)
     except UserNotAuthenticatedException as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.detail)
 
@@ -139,7 +143,7 @@ def get_saved_scope(SID: Optional[str] = Cookie(None), service: SavedScopeServic
         for sc in scopes_and_clients:
             responses.append((
                 ClientSavedScopeResponse(scope=sc[0].scope),
-                ClientResponse(id=sc[1].id, name=sc[1].name, description=sc[1].description)
+                ClientResponse(id=sc[1].id, name=sc[1].name, description=sc[1].description, redirectUrl=sc[1].redirect_url)
             ))
         return SavedScopeResponse(scopes=responses)
     except UserNotAuthenticatedException as e:

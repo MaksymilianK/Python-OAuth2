@@ -12,6 +12,7 @@
         <li><BaseButton to="sign-up">Sign up</BaseButton></li>
       </template>
       <li v-if="current"><BaseButton to="add-client">Add client</BaseButton></li>
+      <li v-if="current"><BaseButton to="scopes">Authorized clients</BaseButton></li>
     </ol>
   </header>
 </template>
