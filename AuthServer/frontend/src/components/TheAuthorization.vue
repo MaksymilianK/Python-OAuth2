@@ -35,7 +35,7 @@ import {ClientResponse} from "@/responses/client-response";
 import {useRouter} from "vue-router";
 import {HTTP_NOT_FOUND, HTTP_OK, HTTP_UNAUTHORIZED} from "@/utils/http-status";
 import {scopesDescriptions} from "@/utils/scopes-descriptions";
-import {ref} from "vue";
+import {reactive, ref} from "vue";
 import {clientService} from "@/services/client-service";
 import {authService} from "@/services/auth-service";
 import {AuthorizationRequest} from "@/requests/authorization-request";
@@ -66,28 +66,22 @@ export default {
       return {error};
     }
 
-    const requestedScopes = query["scope"].split(",");
-
-    const requestedPermissions = [];
-    const grantedPermissions = [];
+    const requestedPermissions = query["scope"].split(",");
+    const grantedPermissions = reactive([]);
 
     scopeService.get_for_client(query["client_id"])
       .then(res => {
         switch (res.status) {
           case HTTP_OK:
-            if (requestedScopes.every(v => res.body.scope.includes(v))) {
+            if (requestedPermissions.every(v => res.body.scope.includes(v))) {
               authorize();
               return;
             } else if (res.body.scope.length !== 0) {
-              grantedPermissions.push(res.body.scope);
-              requestedScopes.forEach(s => {
-                if (!grantedPermissions.includes(s)) {
-                  requestedPermissions.push(s);
-                }
-              })
-            } else {
-              requestedScopes.forEach(s => requestedPermissions.push(s));
+              res.body.scope.forEach(s => grantedPermissions.push(s));
             }
+            break;
+          default:
+              console.log("Unexpected status: " + res.status);
         }
       });
 
@@ -112,7 +106,7 @@ export default {
         });
 
     function authorize() {
-      authService.authorize(new AuthorizationRequest(query["client_id"], requestedScopes))
+      authService.authorize(new AuthorizationRequest(query["client_id"], requestedPermissions))
           .then(res => {
             switch (res.status) {
               case HTTP_OK:
