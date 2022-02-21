@@ -4,6 +4,6 @@ export const REQUIRED_SCOPES = [
     "NOTES_CREATE",
     "NOTES_EDIT"
 ];
-export const backendUrl = "http://185.218.125.97/my-notes/api";
-export const authServerUrl = "http://185.218.125.97/my-auth";
+export const backendUrl = "http://localhost/my-notes/api";
+export const authServerUrl = "http://localhost/my-auth";
 export const authServerUrlBackend = `${authServerUrl}/api`;

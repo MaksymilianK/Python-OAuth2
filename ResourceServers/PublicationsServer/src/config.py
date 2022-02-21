@@ -1,7 +1,7 @@
 class DBConfig:
     USER = 'my_admin'
-    PASS = 'Jm08sf68SA13nBsd12'
-    HOST = '185.218.125.97'
+    PASS = 'password'
+    HOST = 'localhost'
     PORT = 5432
     NAME = 'my_publications'
 
@@ -9,11 +9,11 @@ class DBConfig:
 class WebConfig:
     ROUTE_PREFIX = "/my-publications/api"
     CORS_ENABLED = False
-    CORS_ORIGINS = ["http://185.218.125.97:8082"]
+    CORS_ORIGINS = ["http://localhost:8082"]
 
 
 class OAuth2Config:
-    INTROSPECTION_ENDPOINT = "http://185.218.125.97/my-auth/api/token-info"
+    INTROSPECTION_ENDPOINT = "http://localhost/my-auth/api/token-info"
     SCOPE_READ_PUBLICATIONS = "PUBLICATIONS_READ"
     SCOPE_CREATE_PUBLICATIONS = "PUBLICATIONS_CREATE"
     SCOPE_EDIT_PUBLICATIONS = "PUBLICATIONS_EDIT"
