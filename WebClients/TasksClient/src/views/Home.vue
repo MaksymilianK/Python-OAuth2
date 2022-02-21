@@ -1,4 +1,10 @@
 <template>
+  <p v-if="current" class="login-status">
+      Status: zalogowany
+    </p>
+    <p v-else class="login-status">
+      Status: niezalogowany
+    </p>
   <div v-if="current" class="container">
     <Subheader @toggle-add-task="toggleAddTask" title="Task Tracker" :show-add-task="showAddTask" />
     <AddTask v-show="showAddTask" @add-task="addTask" />
@@ -218,4 +224,9 @@ export default {
   border-radius: 5px;
   box-sizing: border-box;
 }
+
+.login-status {
+  text-align: center;
+  margin: 30px auto;
+  }
 </style>
