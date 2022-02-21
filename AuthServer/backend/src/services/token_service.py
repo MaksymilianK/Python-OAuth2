@@ -47,5 +47,7 @@ class TokenService:
 
         return token, active
 
-    def update_tokens_scopes(self, saved_scope: SavedScope):
-        self.__token_dao.update_scopes(saved_scope)
+    def update_scope(self, saved_scope: SavedScope):
+        self.__token_dao.update_scopes(saved_scope, datetime.now())
+
+        logging.info(f"Update scope of active tokens for user '{saved_scope.user_nick}'")

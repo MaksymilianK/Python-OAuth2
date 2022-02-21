@@ -47,11 +47,12 @@ class TokenDAO:
 
         return [AuthToken(token=t.token_id, client_id=t.client_id, date=t.date) for t in auth_tokens]
 
-    def update_scopes(self, saved_scope: SavedScope):
+    def update_scopes(self, saved_scope: SavedScope, date: datetime):
         tokens = self.__db.query(TokenModel)\
             .filter(and_(
                 TokenModel.owner_nick == saved_scope.user_nick,
-                TokenModel.client_id == saved_scope.client_id
+                TokenModel.client_id == saved_scope.client_id,
+                TokenModel.date > date
             ))\
             .all()
 

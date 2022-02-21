@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from typing import Optional
 
 from fastapi import Depends
@@ -50,7 +51,7 @@ class SavedScopeService:
         else:
             self.__dao.update(SavedScope(user.nick, client_id, scope))
 
-        logging.info(f"Saved new scopes for client {client_id}, user '{user.nick}'; scopes: {scope}")
+        logging.info(f"Saved new scope for client {client_id}, user '{user.nick}'; scopes: {scope}")
 
     def revoke_scope(self, client_id: int, session_id: str):
         user = self.__session_service.get_user(session_id)
@@ -58,4 +59,6 @@ class SavedScopeService:
             raise UserNotAuthenticatedException()
 
         self.__dao.update(SavedScope(user.nick, client_id, []))
-        self.__token_service.update_tokens_scopes(SavedScope(user.nick, client_id, []))
+        self.__token_service.update_scope(SavedScope(user.nick, client_id, []))
+
+        logging.info(f"Revoked scope for client {client_id}, user '{user.nick}'")
