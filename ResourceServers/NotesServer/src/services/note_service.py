@@ -25,14 +25,14 @@ class NoteService:
         )
         note.id = self.__dao.create(note)
 
-        logging.info(f'Create note with id {note.id}')
+        logging.info(f"Create note with id {note.id}")
 
         return note
 
     def delete(self, note_id: int):
         self.__dao.delete(note_id)
 
-        logging.info(f'Delete note with id {note_id}')
+        logging.info(f"Delete note with id {note_id}")
 
     def get_notes(self, owner: str) -> List[Note]:
         return self.__dao.get_all(owner)

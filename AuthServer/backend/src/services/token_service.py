@@ -29,14 +29,14 @@ class TokenService:
         self.__token_dao.create(token)
         self.__code_dao.delete(code)
 
-        logging.info(f'Store authorization token {token_id} for client {auth_code_info.client_id} & owner {auth_code_info.owner_nick}')
+        logging.info(f"Store authorization token '{token_id}' for client with id {auth_code_info.client_id} & owner '{auth_code_info.owner_nick}'")
 
         return token
 
     def revoke_token(self, token: str):
         self.__token_dao.update_date(token, datetime.now())
 
-        logging.info(f'Revoke token {token}')
+        logging.info(f"Revoke token '{token}'")
 
     def introspect_token(self, token: str):
         token = self.__token_dao.get(token)

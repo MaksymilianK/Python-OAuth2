@@ -50,7 +50,7 @@ class SavedScopeService:
         else:
             self.__dao.update(SavedScope(user.nick, client_id, scope))
 
-        logging.info(f"Saved new scopes for client {client_id}, user {user.nick}; scopes {scope}")
+        logging.info(f"Saved new scopes for client {client_id}, user '{user.nick}'; scopes: {scope}")
 
     def revoke_scope(self, client_id: int, session_id: str):
         user = self.__session_service.get_user(session_id)

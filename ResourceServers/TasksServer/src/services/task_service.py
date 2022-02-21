@@ -23,7 +23,7 @@ class TaskService:
 
         task.id = self.__dao.create(task)
 
-        logging.info(f'Create task with id {task.id}')
+        logging.info(f"Create task with id {task.id}")
 
         return task
 
@@ -36,12 +36,12 @@ class TaskService:
     def delete(self, task_id: int):
         self.__dao.delete(task_id)
 
-        logging.info(f'Delete task with id {task_id}')
+        logging.info(f"Delete task with id {task_id}")
 
     def update_status(self, task_id: int, task_request: TaskRequest) -> Task:
         task = self.__dao.update_status(task_id, task_request.status)
 
-        logging.info(f'Update status of the task with id {task_id}')
+        logging.info(f"Update status of the task with id {task_id}")
 
         return task
 

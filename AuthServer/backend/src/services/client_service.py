@@ -34,7 +34,7 @@ class ClientService:
 
         client.id = self.__dao.create(client)
 
-        logging.info(f'Create client {client.name} with id {client.id}')
+        logging.info(f"Create client '{client.name}' with id {client.id}")
 
         return client
 

@@ -115,7 +115,7 @@ def introspect_token(token_request: TokenIntrospectionRequest, service: TokenSer
     try:
         token, active = service.introspect_token(token_request.token)
 
-        logging.info(f'Introspection request for token {token.token}')
+        logging.info(f"Introspection request for token '{token.token}'")
 
         return TokenInfoResponse(token_id=token.token, owner=token.owner_nick,
                                  clientId=token.client_id, scopes=token.scope, active=active)

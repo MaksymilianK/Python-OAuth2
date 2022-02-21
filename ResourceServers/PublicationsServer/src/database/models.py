@@ -2,6 +2,7 @@ import logging
 
 from sqlalchemy import Column, Integer, String, DateTime
 
+from config import DBConfig
 from . import Base, engine
 
 
@@ -17,4 +18,4 @@ class PublicationModel(Base):
 
 Base.metadata.create_all(engine)
 
-logging.info('Database initialized')
+logging.info(f"Initialize database '{DBConfig.NAME}'")

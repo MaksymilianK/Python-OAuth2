@@ -33,7 +33,7 @@ class UserService:
 
         self.__dao.create(user)
 
-        logging.info(f'User {user.nick} signed up')
+        logging.info(f"User '{user.nick}' signed up")
 
         return user, self.__session_service.create(user)
 
@@ -45,14 +45,16 @@ class UserService:
         if not self.__password_service.verify(user.password, form.password):
             raise WrongPasswordException()
 
-        logging.info(f'User {user.nick} signed in')
+        session_id = self.__session_service.create(user)
 
-        return user, self.__session_service.create(user)
+        logging.info(f"User '{user.nick}' signed in with session id '{session_id}'")
+
+        return user, session_id
 
     def sign_out(self, session_id: str):
         self.__session_service.delete(session_id)
 
-        logging.info(f'User with session id {session_id} signed out')
+        logging.info(f"User with session id '{session_id}' signed out")
 
     def get_user(self, session_id: str) -> User:
         user = self.__session_service.get_user(session_id)

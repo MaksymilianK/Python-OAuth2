@@ -121,3 +121,15 @@ class SavedScope:
         self.user_nick = user_nick
         self.client_id = client_id
         self.scope = scope
+
+    def __repr__(self):
+        text = ''
+
+        if self.user_nick is not None:
+            text += f'user: {self.user_nick}, '
+        if self.client_id is not None:
+            text += f'client: {self.client_id}, '
+        if self.scope is not None:
+            text += f'scope: {self.scope}'
+
+        return text

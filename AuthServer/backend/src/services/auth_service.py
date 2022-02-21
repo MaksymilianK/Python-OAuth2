@@ -3,12 +3,11 @@ import secrets
 
 from fastapi import Depends
 
-from exceptions import UserNotAuthenticatedException, ClientNotFoundException, AuthCodeNotFoundException
+from exceptions import UserNotAuthenticatedException, ClientNotFoundException
 from services.saved_scope_service import SavedScopeService
 from web.schemas import AuthCodeRequest
 from persistence.auth_code_dao import AuthCodeDAO
-from persistence.objects import AuthCodeInfo, AuthToken
-from persistence.token_dao import TokenDAO
+from persistence.objects import AuthCodeInfo
 from services.client_service import ClientService
 from services.session_service import SessionService
 
@@ -41,7 +40,7 @@ class AuthService:
         auth_code_info = AuthCodeInfo(code, client.id, auth_request.scope, user.nick)
         self.__code_dao.store(auth_code_info)
 
-        logging.info(f'Store authorization code {code}')
+        logging.info(f"Store authorization code '{code}'")
 
         self.__saved_scope_service.save(client.id, auth_request.scope, session_id)
 
@@ -51,4 +50,4 @@ class AuthService:
 
     def _remove_code(self, code: str):
         if self.__code_dao.delete(code):
-            logging.info(f'Code {code} expired')
+            logging.info(f"Code '{code}' expired")

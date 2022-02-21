@@ -9,7 +9,7 @@ from fastapi import Depends
 from database import SessionLocal, get_db
 from database.models import TokenModel
 from exceptions import TokenNotFoundException
-from persistence.objects import AuthToken, User, Client, SavedScope
+from persistence.objects import AuthToken, SavedScope
 
 
 class TokenDAO:

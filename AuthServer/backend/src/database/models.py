@@ -4,6 +4,8 @@ from . import Base, engine
 
 import logging
 
+from config import DBConfig
+
 
 class UserModel(Base):
     __tablename__ = "users"
@@ -51,4 +53,4 @@ class SavedScopeModel(Base):
 
 Base.metadata.create_all(engine)
 
-logging.info('Database initialized')
+logging.info(f"Initialize database '{DBConfig.NAME}'")

@@ -24,14 +24,14 @@ class PublicationService:
         )
         publication.id = self.__dao.create(publication)
 
-        logging.info(f'Create publication with id {publication.id}')
+        logging.info(f"Create publication with id {publication.id}")
 
         return publication
 
     def delete(self, publication_id: int):
         self.__dao.delete(publication_id)
 
-        logging.info(f'Delete publication with id {publication_id}')
+        logging.info(f"Delete publication with id {publication_id}")
 
     def get_publications(self) -> List[Publication]:
         return self.__dao.get_all()
@@ -39,6 +39,6 @@ class PublicationService:
     def edit(self, publication_request: PublicationEditRequest, owner: str) -> Publication:
         publication = self.__dao.edit(publication_request.id, publication_request.content, owner)
 
-        logging.info(f'Edit publication with id {publication_request.id}')
+        logging.info(f"Edit publication with id {publication_request.id}")
 
         return publication
