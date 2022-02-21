@@ -1,6 +1,8 @@
+from datetime import datetime
 from typing import Optional
 
 from fastapi import Depends
+from sqlalchemy import and_
 
 from database import SessionLocal, get_db
 from database.models import SessionModel
@@ -19,8 +21,13 @@ class SessionDAO:
         self.__db.query(SessionModel).filter(SessionModel.id == session_id).delete()
         self.__db.commit()
 
-    def get_user(self, session_id: str) -> Optional[User]:
-        session = self.__db.query(SessionModel).filter(SessionModel.id == session_id).first()
+    def get_user_for_active(self, session_id: str, date: datetime) -> Optional[User]:
+        session = self.__db.query(SessionModel)\
+            .filter(and_(
+                    SessionModel.id == session_id,
+                    SessionModel.date > date
+                    ))\
+            .first()
         if session is None:
             return None
 

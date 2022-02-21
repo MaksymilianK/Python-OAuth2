@@ -23,4 +23,4 @@ class SessionService:
         self.__dao.delete(session_id)
 
     def get_user(self, session_id: str) -> Optional[User]:
-        return self.__dao.get_user(session_id)
+        return self.__dao.get_user_for_active(session_id, datetime.now())

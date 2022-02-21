@@ -4,7 +4,7 @@
 
     <p v-if="error" class="error">{{ error }}</p>
 
-    <div class="main">
+    <div v-if="showPermissions" class="main">
       <section class="section">
         <h3 class="section-title">Client {{ name }}</h3>
         <p class="section-text">{{ description }}</p>
@@ -69,6 +69,8 @@ export default {
     const requestedPermissions = query["scope"].split(",");
     const grantedPermissions = reactive([]);
 
+    const showPermissions = ref(false);
+
     scopeService.get_for_client(query["client_id"])
       .then(res => {
         switch (res.status) {
@@ -79,10 +81,11 @@ export default {
             } else if (res.body.scope.length !== 0) {
               res.body.scope.forEach(s => grantedPermissions.push(s));
             }
-            break;
+            break
           default:
               console.log("Unexpected status: " + res.status);
         }
+        showPermissions.value = true;
       });
 
     clientService.get_client(query["client_id"])
@@ -137,7 +140,8 @@ export default {
       grantedPermissions,
       error,
       authorize,
-      cancel
+      cancel,
+      showPermissions
     }
   }
 }
